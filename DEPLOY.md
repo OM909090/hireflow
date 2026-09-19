@@ -1,11 +1,27 @@
 # Deploying HireFlow
 
-The web app is a static Next.js build. It has **no runtime dependency** on the
-LLM proxy — the screening run is bundled at `web/src/data/run.json` (real model
-output, verified). So it deploys anywhere with zero environment variables.
-
 The repo is a single git repo at the project root. On Vercel, set the
 **Root Directory to `web`**.
+
+## Model access (required for the AI Interview Agent)
+
+The screening run is bundled at `web/src/data/run.json` (real, verified model
+output), so the pages render without any model. The **AI Interview Agent** is
+live, though: it calls the model server-side through `src/app/api/agent/*`, so it
+needs these environment variables wherever you deploy.
+
+| Variable | Purpose |
+| --- | --- |
+| `HIREFLOW_API_KEY` | Key for the chat/completions endpoint (server-side only). |
+| `HIREFLOW_BASE_URL` | OpenAI-compatible base URL, e.g. `https://api.example.com/v1`. |
+| `HIREFLOW_MODEL` | Model id, e.g. `kr/gpt-5.6-luna`. |
+
+See `web/.env.example`. Locally, copy it to `web/.env.local`.
+
+**Important for hosted deploys:** a `127.0.0.1` endpoint is only reachable from
+your own machine. To run the agent on Vercel, point `HIREFLOW_BASE_URL` at an
+endpoint reachable from the internet. Without these vars the pages still work and
+the agent panel reports "no model configured" instead of pretending to verify.
 
 ---
 
