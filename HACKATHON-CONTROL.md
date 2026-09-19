@@ -329,3 +329,11 @@ engagement bonus is scored at submission time.
   candidate run concurrently (91 s total vs ~19 min naive). UI now reads real model output
   from `web/src/data/run.json`; `mock-data.ts` deleted. Build + lint clean.
 - **Next** — demo video, Day 2 LinkedIn post, Vercel deploy, submission.
+
+- **19 Sep, ~19:00** — Production pass. Added the missing planned capability (12, NL query) at
+  `/ask` — grounded client-side engine, returns real evidence. Made "Run screening" replay the
+  real agent trace live (stepper + streaming verifier lines). Replaced fake header chrome with
+  honest controls (model badge, working Share, real open-count bell, provenance footer). Added
+  404, OG + Twitter images, full metadata. Consolidated into one git repo at the root (secret
+  verified out of the commit). Build + lint clean, 15 routes. Capability coverage now 9/13, matching
+  the plan. Deploy is prepared (`DEPLOY.md`) but needs Om's Vercel login or a token.
