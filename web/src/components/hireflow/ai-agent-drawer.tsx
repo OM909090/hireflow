@@ -625,7 +625,10 @@ function AgentBody({
             onSubmit={(e) => {
               e.preventDefault();
               const q = freeQuestion.trim();
-              if (q) runHelp("free", q);
+              if (q) {
+                runHelp("free", q);
+                setFreeQuestion("");
+              }
             }}
             className="mt-2 flex items-center gap-1.5"
           >
