@@ -1,14 +1,15 @@
 import { AlertTriangle, BadgeCheck, FileText, Mic } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type {
-  Finding,
-  FindingStatus,
-  InterviewItem,
-  Requirement,
-} from "@/lib/types";
+import type { Finding, FindingStatus, Requirement } from "@/lib/types";
 import { Eyebrow, IdTag, Panel } from "./kit";
 import { STATUS_META, StatusBadge } from "./status-badge";
+
+/** Minimal interview outcome — a live verification promoted this requirement. */
+export interface InterviewOutcome {
+  requirementId: string;
+  newStatus: FindingStatus;
+}
 
 /**
  * Standardized interview evaluation report (capability 11) + unanswered
@@ -27,7 +28,7 @@ export function EvaluationReport({
 }: {
   requirements: Requirement[];
   findings: Finding[];
-  interviews: InterviewItem[];
+  interviews: InterviewOutcome[];
 }) {
   const findingByReq = new Map(findings.map((f) => [f.requirementId, f]));
   const interviewByReq = new Map(interviews.map((i) => [i.requirementId, i]));

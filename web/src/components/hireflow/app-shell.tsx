@@ -18,6 +18,11 @@ import {
 
 import { cn } from "@/lib/utils";
 import { findings, generatedAt, job, model } from "@/lib/data";
+import {
+  useVerification,
+  VerificationProvider,
+} from "@/lib/verification-store";
+import { HireFlowGlyph } from "./logo";
 
 const RAIL = [
   { href: "/", label: "Intake", icon: LayoutGrid },
@@ -27,10 +32,6 @@ const RAIL = [
   { href: "/ask", label: "Ask the pool", icon: Search },
   { href: "/activity", label: "Agent activity", icon: Activity },
 ];
-
-const OPEN_COUNT = findings.filter(
-  (f) => f.status === "unverified" || f.status === "absent",
-).length;
 
 const ORG_INITIALS = job.company
   .split(" ")
@@ -66,6 +67,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
+    <VerificationProvider>
     <div className="h-dvh overflow-hidden p-3 sm:p-5 lg:p-7">
       <div className="mx-auto flex h-full max-w-[1500px] overflow-hidden rounded-[28px] border border-white/70 bg-card app-panel">
         {/* ── Icon rail ── */}
@@ -78,7 +80,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             aria-label="HireFlow home"
             className="grid size-11 place-items-center rounded-2xl brand-gradient text-white shadow-sm"
           >
-            <Sparkles className="size-5" aria-hidden />
+            <HireFlowGlyph size={22} />
           </Link>
 
           <div className="mt-4 flex flex-col gap-2">
@@ -163,18 +165,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 )}
               </button>
 
-              <Link
-                href="/candidates"
-                title={`${OPEN_COUNT} requirements need validation`}
-                className="relative grid size-9 place-items-center rounded-full border border-border transition-colors hover:bg-accent"
-              >
-                <AlertTriangle className="size-4 text-foreground/70" aria-hidden />
-                {OPEN_COUNT > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 grid min-w-4.5 place-items-center rounded-full bg-[var(--color-unverified)] px-1 text-[10px] font-bold text-white">
-                    {OPEN_COUNT}
-                  </span>
-                )}
-              </Link>
+              <OpenCountBell />
 
               <span className="flex items-center gap-2 rounded-full border border-border py-1 pr-1 pl-3">
                 <span className="hidden text-xs font-medium sm:inline">
@@ -214,7 +205,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           {/* Provenance footer */}
           <footer className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 border-t border-border bg-card px-4 py-3 text-[11px] text-muted-foreground sm:px-6">
-            <span className="font-semibold text-foreground/70">HireFlow</span>
+            <span className="flex items-center gap-1.5 font-semibold text-foreground/70">
+              <HireFlowGlyph size={13} className="text-primary" />
+              HireFlow
+            </span>
             <span>Evidence-backed candidate screening</span>
             <span className="ml-auto flex flex-wrap items-center gap-x-3 gap-y-1">
               <span>model {model}</span>
@@ -233,6 +227,37 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </div>
     </div>
+    </VerificationProvider>
+  );
+}
+
+/**
+ * Header alert counter — live.
+ *
+ * Reports the number of requirements still awaiting human validation across the
+ * pool, subtracting any that have since been verified live in an interview.
+ */
+function OpenCountBell() {
+  const { isVerifiedLive } = useVerification();
+  const open = findings.filter(
+    (f) =>
+      (f.status === "unverified" || f.status === "absent") &&
+      !isVerifiedLive(f.candidateId, f.requirementId),
+  ).length;
+
+  return (
+    <Link
+      href="/candidates"
+      title={`${open} requirements need validation`}
+      className="relative grid size-9 place-items-center rounded-full border border-border transition-colors hover:bg-accent"
+    >
+      <AlertTriangle className="size-4 text-foreground/70" aria-hidden />
+      {open > 0 && (
+        <span className="absolute -top-1.5 -right-1.5 grid min-w-4.5 place-items-center rounded-full bg-[var(--color-unverified)] px-1 text-[10px] font-bold text-white">
+          {open}
+        </span>
+      )}
+    </Link>
   );
 }
 

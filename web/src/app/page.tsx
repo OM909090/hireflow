@@ -11,7 +11,6 @@ import {
   Briefcase,
   CheckCircle2,
   FileText,
-  Info,
   MapPin,
   Play,
   RotateCcw,
@@ -21,6 +20,7 @@ import {
 
 import { PageHeader } from "@/components/hireflow/app-shell";
 import { RunConsole } from "@/components/hireflow/run-console";
+import { UploadGuidelines } from "@/components/hireflow/upload-guidelines";
 import {
   Avatar,
   Chip,
@@ -121,24 +121,6 @@ export default function IntakePage() {
 
       {phase === "idle" && (
         <>
-          <div className="mb-4 flex items-start gap-2.5 rounded-2xl border border-border bg-card/70 p-3.5 text-xs leading-relaxed text-muted-foreground">
-            <Info className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
-            <p>
-              <span className="font-semibold text-foreground/80">
-                How this demo runs.
-              </span>{" "}
-              The pool is synthetic, and the screening is a faithful replay of
-              real, verifier-checked model output recorded ahead of time. A live
-              model call takes ~30s, so the deployed app streams the recorded run
-              rather than calling the model in the browser — the evidence,
-              quotes, and refusals you see are all genuine. To regenerate:{" "}
-              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">
-                cd api &amp;&amp; uv run python -m hireflow.run
-              </code>
-              .
-            </p>
-          </div>
-
           <div className="grid items-start gap-4 lg:grid-cols-3">
             {/* ── Job description ── */}
             <Panel className="lg:col-span-2">
@@ -257,6 +239,12 @@ export default function IntakePage() {
                   <div className="flex items-center justify-center gap-2 rounded-2xl border border-dashed border-input bg-muted/40 px-4 py-5 text-sm text-muted-foreground">
                     <Upload className="size-4" aria-hidden />
                     Drop more resumes
+                  </div>
+                  <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2">
+                    <UploadGuidelines />
+                    <span className="font-mono text-[11px] text-muted-foreground">
+                      TXT · MD
+                    </span>
                   </div>
                   <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
                     Every candidate in this demo is synthetic. HireFlow is never
