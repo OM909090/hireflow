@@ -1,10 +1,6 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
-import { PageHeader } from "@/components/hireflow/app-shell";
 import { CandidateWorkspace } from "@/components/hireflow/candidate-workspace";
-import { buttonVariants } from "@/components/ui/button";
 import {
   candidates,
   findingsFor,
@@ -36,30 +32,13 @@ export default async function CandidatePage({
   );
 
   return (
-    <>
-      <PageHeader
-        eyebrow={`Candidate ${candidate.id}`}
-        title={candidate.name}
-        subtitle={candidate.headline}
-        actions={
-          <Link
-            href="/candidates"
-            className={buttonVariants({ variant: "outline", size: "lg" })}
-          >
-            <ArrowLeft className="size-4" aria-hidden />
-            All candidates
-          </Link>
-        }
-      />
-
-      <CandidateWorkspace
-        candidate={candidate}
-        jobTitle={job.title}
-        requirements={requirements}
-        findings={findings}
-        questions={questions}
-        recordedAnswers={recordedAnswers}
-      />
-    </>
+    <CandidateWorkspace
+      candidate={candidate}
+      jobTitle={job.title}
+      requirements={requirements}
+      findings={findings}
+      questions={questions}
+      recordedAnswers={recordedAnswers}
+    />
   );
 }

@@ -44,7 +44,7 @@ import { StatusBadge } from "./status-badge";
  *      live per-candidate state.
  * No manual "mark verified" control; the recruiter runs the conversation.
  */
-export function AiAgentDrawer({
+export function AiAgentPanel({
   open,
   onClose,
   candidate,
@@ -76,42 +76,32 @@ export function AiAgentDrawer({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+  if (!open) return null;
+
+  // Embedded, not an overlay: a sticky right-hand column that fits inside the
+  // app card. It sticks to the top of the scrolling content and is capped to the
+  // visible content height so the whole conversation stays on screen while the
+  // workspace scrolls beside it.
   return (
-    <>
-      <div
-        onClick={onClose}
-        aria-hidden
-        className={cn(
-          "fixed inset-0 z-40 bg-foreground/10 transition-opacity duration-200 supports-backdrop-filter:backdrop-blur-[2px]",
-          open ? "opacity-100" : "pointer-events-none opacity-0",
-        )}
-      />
-      <aside
-        role="dialog"
-        aria-modal="true"
-        aria-label={`HireFlow AI interview assistant for ${candidate.name}`}
-        aria-hidden={!open}
-        className={cn(
-          "fixed top-0 right-0 z-50 flex h-dvh w-full flex-col border-l border-border bg-card shadow-2xl transition-transform duration-250 ease-out sm:w-[440px]",
-          open ? "translate-x-0" : "pointer-events-none translate-x-full",
-        )}
-      >
-        {open && (
-          <AgentChat
-            key={candidate.id}
-            onClose={onClose}
-            candidate={candidate}
-            jobTitle={jobTitle}
-            requirements={requirements}
-            findings={findings}
-            questions={questions}
-            recordedAnswers={recordedAnswers}
-            focusReqId={focusReqId}
-            onFocus={onFocus}
-          />
-        )}
-      </aside>
-    </>
+    <aside
+      aria-label={`HireFlow AI interview assistant for ${candidate.name}`}
+      className="mt-4 lg:sticky lg:top-0 lg:mt-0 lg:self-start"
+    >
+      <div className="flex h-[70vh] flex-col overflow-hidden rounded-3xl border border-border bg-card card-lift lg:h-[calc(100dvh-12.5rem)]">
+        <AgentChat
+          key={candidate.id}
+          onClose={onClose}
+          candidate={candidate}
+          jobTitle={jobTitle}
+          requirements={requirements}
+          findings={findings}
+          questions={questions}
+          recordedAnswers={recordedAnswers}
+          focusReqId={focusReqId}
+          onFocus={onFocus}
+        />
+      </div>
+    </aside>
   );
 }
 
