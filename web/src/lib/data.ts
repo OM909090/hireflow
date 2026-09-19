@@ -4,6 +4,7 @@ import type {
   ActivityEvent,
   Candidate,
   Finding,
+  InterviewItem,
   InterviewQuestion,
   JobDescription,
   Requirement,
@@ -35,6 +36,7 @@ export const requirements: Requirement[] = run.requirements;
 export const candidates: Candidate[] = run.candidates;
 export const findings: Finding[] = run.findings;
 export const questions: InterviewQuestion[] = run.questions;
+export const interviews: InterviewItem[] = run.interviews ?? [];
 export const activity: ActivityEvent[] = run.activity;
 export const generatedAt: string | undefined = run.generatedAt;
 
@@ -72,3 +74,18 @@ export function questionsFor(candidateId: string): InterviewQuestion[] {
 export function requirementById(id: string): Requirement | undefined {
   return requirements.find((r) => r.id === id);
 }
+
+export function interviewsFor(candidateId: string): InterviewItem[] {
+  return interviews
+    .filter((i) => i.candidateId === candidateId)
+    .sort(
+      (a, b) =>
+        (REQ_ORDER.get(a.requirementId) ?? 0) -
+        (REQ_ORDER.get(b.requirementId) ?? 0),
+    );
+}
+
+/** Candidates that have recorded interview answers. */
+export const interviewedCandidateIds: string[] = [
+  ...new Set(interviews.map((i) => i.candidateId)),
+];

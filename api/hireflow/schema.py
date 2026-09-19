@@ -97,6 +97,46 @@ class InterviewQuestion(BaseModel):
         }
 
 
+class InterviewItem(BaseModel):
+    """
+    One requirement re-evaluated after the interviewer recorded an answer.
+
+    This closes the evidence chain: a resume gap becomes a question, the question
+    gets an answer, and the answer is mapped back to the requirement as new
+    evidence. The answer is treated as the source document — the same verifier
+    checks that any quoted span actually appears in what the interviewer typed.
+    """
+
+    id: str
+    candidate_id: str
+    requirement_id: str
+    question: str
+    answer: str
+    prior_status: FindingStatus
+    new_status: FindingStatus
+    reason: str
+    missing_detail: str | None = None
+    follow_up: str | None = None
+    evidence: list[EvidenceSpan] = Field(default_factory=list)
+    model: str = ""
+
+    def to_ui(self) -> dict:
+        return {
+            "id": self.id,
+            "candidateId": self.candidate_id,
+            "requirementId": self.requirement_id,
+            "question": self.question,
+            "answer": self.answer,
+            "priorStatus": self.prior_status,
+            "newStatus": self.new_status,
+            "reason": self.reason,
+            "missingDetail": self.missing_detail,
+            "followUp": self.follow_up,
+            "evidence": [e.to_ui() for e in self.evidence],
+            "model": self.model,
+        }
+
+
 class Candidate(BaseModel):
     id: str
     name: str
@@ -158,6 +198,7 @@ class ScreeningRun(BaseModel):
     candidates: list[Candidate] = Field(default_factory=list)
     findings: list[Finding] = Field(default_factory=list)
     questions: list[InterviewQuestion] = Field(default_factory=list)
+    interviews: list[InterviewItem] = Field(default_factory=list)
     activity: list[ActivityEvent] = Field(default_factory=list)
 
     def to_ui(self) -> dict:
@@ -167,6 +208,7 @@ class ScreeningRun(BaseModel):
             "candidates": [c.to_ui() for c in self.candidates],
             "findings": [f.to_ui() for f in self.findings],
             "questions": [q.to_ui() for q in self.questions],
+            "interviews": [i.to_ui() for i in self.interviews],
             "activity": [a.to_ui() for a in self.activity],
             "generatedAt": datetime.now(timezone.utc).isoformat(),
         }
@@ -215,3 +257,11 @@ class ProposedQuestion(BaseModel):
 
 class ProposedQuestions(BaseModel):
     questions: list[ProposedQuestion] = Field(default_factory=list)
+
+
+class ProposedInterviewEval(BaseModel):
+    new_status: FindingStatus = "unverified"
+    reason: str = ""
+    evidence_quote: str | None = None
+    missing_detail: str | None = None
+    follow_up: str | None = None

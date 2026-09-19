@@ -15,7 +15,9 @@ import {
   coverageSegments,
 } from "@/components/hireflow/coverage";
 import { DecisionHero } from "@/components/hireflow/decision-bar";
+import { EvaluationReport } from "@/components/hireflow/evaluation-report";
 import { FindingRow } from "@/components/hireflow/finding-row";
+import { InterviewPanel } from "@/components/hireflow/interview-panel";
 import {
   Avatar,
   Donut,
@@ -30,6 +32,7 @@ import {
   candidates,
   findingsFor,
   getCandidate,
+  interviewsFor,
   questionsFor,
   requirementById,
   requirements,
@@ -49,9 +52,13 @@ export default async function CandidatePage({
 
   const findings = findingsFor(id);
   const questions = questionsFor(id);
+  const interviewItems = interviewsFor(id);
   const summary = summariseCoverage(findings, requirements);
   const open = needsValidation(findings);
   const questionByReq = new Map(questions.map((q) => [q.requirementId, q]));
+  const reqTextMap: Record<string, string> = Object.fromEntries(
+    requirements.map((r) => [r.id, r.text]),
+  );
 
   return (
     <>
@@ -143,6 +150,11 @@ export default async function CandidatePage({
             </section>
           )}
 
+          {/* Interview mode — interactive gap resolution */}
+          {interviewItems.length > 0 && (
+            <InterviewPanel items={interviewItems} reqText={reqTextMap} />
+          )}
+
           {/* Requirement coverage */}
           <Panel>
             <PanelHead
@@ -216,6 +228,13 @@ export default async function CandidatePage({
               </div>
             </Panel>
           )}
+
+          {/* Standardized evaluation report — resume + interview combined */}
+          <EvaluationReport
+            requirements={requirements}
+            findings={findings}
+            interviews={interviewItems}
+          />
         </div>
 
         {/* ══ Right: profile, ring, verdict ══

@@ -88,6 +88,25 @@ export interface InterviewQuestion {
   followUp?: string;
 }
 
+/**
+ * One requirement re-evaluated after the interviewer recorded an answer.
+ * Closes the evidence chain: gap -> question -> answer -> re-evaluation.
+ */
+export interface InterviewItem {
+  id: string;
+  candidateId: string;
+  requirementId: string;
+  question: string;
+  answer: string;
+  priorStatus: FindingStatus;
+  newStatus: FindingStatus;
+  reason: string;
+  missingDetail?: string | null;
+  followUp?: string | null;
+  evidence: EvidenceSpan[];
+  model: string;
+}
+
 /** Recruiter's decision. The AI never sets this. */
 export type Decision = "shortlist" | "review" | "reject" | null;
 
@@ -129,6 +148,7 @@ export interface ScreeningRun {
   candidates: Candidate[];
   findings: Finding[];
   questions: InterviewQuestion[];
+  interviews: InterviewItem[];
   activity: ActivityEvent[];
 }
 

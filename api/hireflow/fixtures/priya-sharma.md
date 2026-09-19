@@ -4,21 +4,22 @@ Senior Backend Engineer · Bengaluru, India
 
 ## Experience
 
-**Senior Backend Engineer, Kaleidofin — 2021 to 2026**
-Python services for lending and collections.
-Built and owned twelve FastAPI services handling roughly 4M requests per day in production.
-Designed the PostgreSQL schema for the collections ledger and cut p99 query latency from 840ms to 96ms by reworking indexes and partitioning by month.
-Containerised microservices using Docker and Docker Compose for local and staging environments.
-Moved settlement reconciliation onto RabbitMQ with Celery workers to decouple it from the request path.
-Mentored three junior engineers and ran the backend onboarding track for eighteen months.
+**Senior Backend Engineer, Razorpay — 2019 to 2025**
+Built payment services in Java and Spring Boot for six years.
+Designed and built REST APIs serving over 2 million requests per month.
+Optimised the PostgreSQL schema and queries for the settlement ledger, cutting p99 latency from 720ms to 90ms.
+Dockerised all Spring Boot services and ran them in staging and production.
+Deployed services to AWS ECS with blue-green releases.
+Built Kafka event pipelines for settlement reconciliation across four consumer groups.
+Set up the CI/CD pipeline in GitHub Actions for the payments team.
 
-**Backend Engineer, Razorpay — 2020 to 2021**
-Python and Flask payment integrations.
+**Backend Engineer, Freecharge — 2017 to 2019**
+Java and Spring services for wallet and offers.
 
 ## Education
 
-B.Tech in Computer Science, Vellore Institute of Technology, 2020.
+B.Tech in Computer Science, BITS Pilani, 2017.
 
 ## Skills
 
-Python, FastAPI, PostgreSQL, Redis, Docker, Celery, AWS
+Java, Spring Boot, REST, PostgreSQL, Docker, AWS, Kafka, GitHub Actions

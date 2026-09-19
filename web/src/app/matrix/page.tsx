@@ -1,0 +1,178 @@
+import Link from "next/link";
+
+import { PageHeader } from "@/components/hireflow/app-shell";
+import { Eyebrow, Panel } from "@/components/hireflow/kit";
+import { STATUS_META } from "@/components/hireflow/status-badge";
+import {
+  candidates,
+  findings,
+  findingsFor,
+  requirements,
+} from "@/lib/data";
+import { summariseCoverage } from "@/lib/types";
+import type { FindingStatus } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+export const metadata = {
+  title: "Evidence Matrix — HireFlow",
+};
+
+// finding lookup by candidate × requirement
+const CELL = new Map(
+  findings.map((f) => [`${f.candidateId}:${f.requirementId}`, f]),
+);
+
+const cellClass: Record<FindingStatus, string> = {
+  met: "bg-[var(--color-met-bg)] text-[var(--color-met)]",
+  partial: "bg-[var(--color-partial-bg)] text-[var(--color-partial)]",
+  unverified: "bg-[var(--color-unverified-bg)] text-[var(--color-unverified)]",
+  absent: "bg-[var(--color-absent-bg)] text-[var(--color-absent)]",
+};
+
+export default function MatrixPage() {
+  const cols = candidates.map((c) => ({
+    candidate: c,
+    summary: summariseCoverage(findingsFor(c.id), requirements),
+  }));
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Evidence matrix"
+        title="Every candidate against every requirement"
+        subtitle="One grid, no scores. Each cell is a verdict backed by located evidence or a flagged gap — click any cell to see the reasoning behind it."
+      />
+
+      <Panel className="overflow-hidden p-0">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="sticky left-0 z-10 min-w-[280px] border-b border-border bg-card p-4 text-left align-bottom">
+                  <Eyebrow>Requirement</Eyebrow>
+                </th>
+                {cols.map(({ candidate: c, summary }) => (
+                  <th
+                    key={c.id}
+                    className="border-b border-l border-border bg-card p-3 text-center align-bottom"
+                  >
+                    <Link
+                      href={`/candidates/${c.id}`}
+                      className="group flex flex-col items-center gap-1.5"
+                    >
+                      <span className="grid size-9 place-items-center rounded-full bg-secondary text-[11px] font-bold text-secondary-foreground group-hover:bg-accent group-hover:text-accent-foreground">
+                        {c.name
+                          .split(" ")
+                          .map((p) => p[0])
+                          .slice(0, 2)
+                          .join("")}
+                      </span>
+                      <span className="max-w-[92px] truncate text-xs font-semibold group-hover:text-primary">
+                        {c.name.split(" ")[0]}
+                      </span>
+                      <span className="text-[10px] font-medium tabular-nums text-muted-foreground">
+                        {summary.hardEvidenced}/{summary.hardTotal} must-have
+                      </span>
+                    </Link>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {requirements.map((r) => (
+                <tr key={r.id} className="group">
+                  <th className="sticky left-0 z-10 border-b border-border bg-card p-4 text-left align-middle group-hover:bg-muted/40">
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-md bg-secondary px-1.5 py-0.5 font-mono text-[10px] font-bold text-secondary-foreground">
+                        {r.id}
+                      </span>
+                      {r.kind === "soft" && (
+                        <span className="rounded border border-border px-1 py-0.5 text-[9px] font-medium tracking-wide text-muted-foreground uppercase">
+                          nice
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 max-w-[240px] text-[13px] leading-snug font-medium text-foreground">
+                      {r.text}
+                    </p>
+                  </th>
+
+                  {cols.map(({ candidate: c }) => {
+                    const f = CELL.get(`${c.id}:${r.id}`);
+                    if (!f) {
+                      return (
+                        <td
+                          key={c.id}
+                          className="border-b border-l border-border p-2 text-center text-muted-foreground group-hover:bg-muted/40"
+                        >
+                          —
+                        </td>
+                      );
+                    }
+                    const meta = STATUS_META[f.status];
+                    const Icon = meta.icon;
+                    return (
+                      <td
+                        key={c.id}
+                        className="border-b border-l border-border p-2 text-center group-hover:bg-muted/40"
+                      >
+                        <Link
+                          href={`/candidates/${c.id}`}
+                          title={`${c.name} · ${r.id} · ${meta.label}\n${f.reason}`}
+                          className={cn(
+                            "mx-auto flex size-9 items-center justify-center rounded-xl transition-transform hover:scale-110",
+                            cellClass[f.status],
+                          )}
+                        >
+                          <Icon className="size-4.5" aria-hidden />
+                          <span className="sr-only">{meta.label}</span>
+                        </Link>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border bg-muted/30 px-4 py-3">
+          <Eyebrow>Legend</Eyebrow>
+          {(["met", "partial", "unverified", "absent"] as FindingStatus[]).map(
+            (s) => {
+              const meta = STATUS_META[s];
+              const Icon = meta.icon;
+              return (
+                <span
+                  key={s}
+                  className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"
+                >
+                  <span
+                    className={cn(
+                      "grid size-5 place-items-center rounded-md",
+                      cellClass[s],
+                    )}
+                  >
+                    <Icon className="size-3" aria-hidden />
+                  </span>
+                  {meta.label}
+                </span>
+              );
+            },
+          )}
+          <span className="ml-auto text-xs text-muted-foreground">
+            {candidates.length} candidates × {requirements.length} requirements
+          </span>
+        </div>
+      </Panel>
+
+      <p className="mt-4 max-w-3xl text-xs leading-relaxed text-muted-foreground">
+        This is deliberately not a leaderboard of match percentages. A single
+        score hides the one thing a hiring team needs — which specific
+        requirements are evidenced, which are only claimed, and which are
+        missing. The matrix keeps all of it visible and traceable.
+      </p>
+    </>
+  );
+}

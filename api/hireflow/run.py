@@ -80,6 +80,8 @@ async def main_async(args: argparse.Namespace) -> int:
     print(f"  quotes verified  {verified_spans}")
     print(f"  quotes refused   {refused_spans}")
     print(f"  questions        {len(run.questions)}")
+    flips = sum(1 for i in run.interviews if i.new_status != i.prior_status)
+    print(f"  interviews       {len(run.interviews)}  ({flips} status change(s))")
     print(f"  activity events  {len(run.activity)}")
     print(f"\nwrote {out}")
     print(f"wrote {web_data / 'run.json'}")

@@ -1,0 +1,13 @@
+{
+  "_comment": "Recorded interview answers, keyed by candidate id. Each answer is treated as the source document for interview evidence and re-evaluated against the requirement. C-04 (Rahul) demonstrates both paths: a strong, specific Kubernetes answer that should flip the requirement to met, and a vague Kafka answer that should stay unverified with a follow-up.",
+  "C-04": [
+    {
+      "requirement_id": "REQ-07",
+      "answer": "Yes. At Swiggy I deployed our order services on AWS EKS. I owned the Helm charts, configured liveness and readiness probes, and set CPU and memory requests and limits. I ran the rolling deployments myself, and during one production incident a bad rollout was failing health checks, so I rolled it back with kubectl and then added a stricter readiness gate so it could not happen again. I was on the on-call rotation for that cluster for about a year."
+    },
+    {
+      "requirement_id": "REQ-09",
+      "answer": "Yeah, I've worked with Kafka a bit."
+    }
+  ]
+}

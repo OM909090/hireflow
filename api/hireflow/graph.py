@@ -32,6 +32,7 @@ from .config import FIXTURES, Settings
 from .llm import LLMClient, LLMError
 from .prompts import (
     EVIDENCE_RULE,
+    INTERVIEW_PROMPT,
     QUESTIONS_PROMPT,
     REQUIREMENTS_PROMPT,
     REVIEW_PROMPT,
@@ -42,9 +43,11 @@ from .schema import (
     Candidate,
     EvidenceSpan,
     Finding,
+    InterviewItem,
     InterviewQuestion,
     JobDescription,
     ProposedCandidateReview,
+    ProposedInterviewEval,
     ProposedQuestions,
     ProposedRequirements,
     Requirement,
@@ -65,6 +68,7 @@ class GraphState(TypedDict, total=False):
     requirements: list[Requirement]
     findings: list[Finding]
     questions: list[InterviewQuestion]
+    interviews: list[InterviewItem]
     activity: Annotated[list[ActivityEvent], _merge]
     client: Any
     settings: Any
@@ -501,7 +505,153 @@ async def generate_questions(state: GraphState) -> dict:
     return {"questions": questions, "activity": acts, "errors": errors}
 
 
-# ── 6. finalise ───────────────────────────────────────────────────────────────
+# ── 6. interviews — re-evaluate gaps against recorded answers ─────────────────
+
+
+def load_interviews() -> dict[str, list[dict]]:
+    """Recorded interview answers, keyed by candidate id. Optional."""
+    path = FIXTURES / "interviews.json"
+    if not path.exists():
+        return {}
+    import json
+
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    return {k: v for k, v in raw.items() if not k.startswith("_")}
+
+
+async def run_interviews(state: GraphState) -> dict:
+    """
+    Close the loop: for each recorded interview answer, re-evaluate the
+    requirement using the answer as new evidence.
+
+    The answer is the source document here — the verifier checks the model's
+    quote against what the interviewer actually typed, exactly as it does for
+    resumes. A strong, specific answer can flip a gap to met; a vague one stays
+    unverified and yields a follow-up question.
+    """
+    recorded = load_interviews()
+    if not recorded:
+        return {}
+
+    client: LLMClient = state["client"]
+    reqs = {r.id: r for r in state["requirements"]}
+    findings_by = {(f.candidate_id, f.requirement_id): f for f in state["findings"]}
+    questions_by = {
+        (q.candidate_id, q.requirement_id): q for q in state["questions"]
+    }
+    cands = {c.id: c for c in state["candidates"]}
+    model = state["settings"].model
+
+    tasks = []
+    meta: list[tuple[str, str, str]] = []  # (cid, rid, answer)
+    for cid, items in recorded.items():
+        if cid not in cands:
+            continue
+        for item in items:
+            rid = item.get("requirement_id")
+            answer = item.get("answer", "")
+            if rid not in reqs or not answer:
+                continue
+            prior = findings_by.get((cid, rid))
+            q = questions_by.get((cid, rid))
+            prompt = INTERVIEW_PROMPT.format(
+                requirement_text=reqs[rid].text,
+                prior_status=prior.status if prior else "unverified",
+                prior_reason=prior.reason if prior else "n/a",
+                question=q.question if q else "Tell me about your experience here.",
+                answer=answer,
+                status_policy=STATUS_POLICY,
+            )
+            tasks.append(
+                client.complete_model(
+                    prompt, ProposedInterviewEval, max_tokens=1500, label=f"interview {cid} {rid}"
+                )
+            )
+            meta.append((cid, rid, answer))
+
+    if not tasks:
+        return {}
+
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    interviews: list[InterviewItem] = []
+    acts: list[ActivityEvent] = []
+
+    for (cid, rid, answer), res in zip(meta, results):
+        if isinstance(res, Exception):
+            acts.append(ev("warn", f"{cid} {rid} · interview eval failed"))
+            continue
+        prior = findings_by.get((cid, rid))
+        q = questions_by.get((cid, rid))
+
+        # Verify the quote against the ANSWER, not the resume.
+        evidence: list[EvidenceSpan] = []
+        verified = False
+        if res.evidence_quote:
+            vr = verify_quote(res.evidence_quote, answer)
+            evidence.append(
+                EvidenceSpan(
+                    quote=res.evidence_quote,
+                    source_doc="interview note",
+                    location_hint="Interview answer",
+                    verified=vr.verified,
+                    method=vr.method.value,
+                    detail=vr.detail,
+                )
+            )
+            verified = vr.verified
+
+        new_status = res.new_status
+        # Guard: cannot claim met on interview evidence we could not locate.
+        if new_status in ("met", "partial") and res.evidence_quote and not verified:
+            new_status = "unverified"
+
+        prior_status = prior.status if prior else "unverified"
+        interviews.append(
+            InterviewItem(
+                id=f"IV-{cid.replace('-', '')}-{rid.replace('-', '')}",
+                candidate_id=cid,
+                requirement_id=rid,
+                question=q.question if q else "",
+                answer=answer,
+                prior_status=prior_status,
+                new_status=new_status,
+                reason=res.reason,
+                missing_detail=res.missing_detail,
+                follow_up=res.follow_up,
+                evidence=evidence,
+                model=model,
+            )
+        )
+
+        flipped = new_status != prior_status
+        if new_status == "met":
+            acts.append(
+                ev("verifier", f"{cid} {rid} · interview answer verified → met")
+            )
+        elif flipped:
+            acts.append(ev("agent", f"{cid} {rid} · {prior_status} → {new_status} after interview"))
+        else:
+            acts.append(
+                ev("warn", f"{cid} {rid} · interview answer insufficient → still {new_status}")
+            )
+
+    # Findings are intentionally NOT overwritten. They record the resume
+    # screening. The interview items are an overlay carrying prior→new status,
+    # so the UI can show the transition and the evaluation report can combine
+    # resume evidence with interview evidence without losing the baseline.
+    n_flip = sum(1 for i in interviews if i.new_status != i.prior_status)
+    acts.append(
+        ev(
+            "agent",
+            f"Interview evaluation complete · {len(interviews)} answers · "
+            f"{n_flip} requirement(s) updated",
+        )
+    )
+    return {"interviews": interviews, "activity": acts}
+
+
+# ── 7. finalise ───────────────────────────────────────────────────────────────
 
 
 async def finalise(state: GraphState) -> dict:
@@ -529,6 +679,7 @@ def build_graph():
     g.add_node("review_candidates", review_candidates)
     g.add_node("verify_evidence", verify_evidence)
     g.add_node("generate_questions", generate_questions)
+    g.add_node("run_interviews", run_interviews)
     g.add_node("finalise", finalise)
 
     g.set_entry_point("ingest")
@@ -540,7 +691,8 @@ def build_graph():
         evidence_sufficient,
         {"generate_questions": "generate_questions", "finalise": "finalise"},
     )
-    g.add_edge("generate_questions", "finalise")
+    g.add_edge("generate_questions", "run_interviews")
+    g.add_edge("run_interviews", "finalise")
     g.add_edge("finalise", END)
     return g.compile()
 
@@ -553,7 +705,7 @@ async def run_screening(
     global _seq
     _seq = 0
 
-    jd_path = jd_path or (FIXTURES / "northwind-senior-backend-engineer.md")
+    jd_path = jd_path or (FIXTURES / "senior-backend-engineer-java.md")
     if resume_paths is None:
         resume_paths = [
             p for p in sorted(FIXTURES.glob("*.md")) if p.name != jd_path.name
@@ -584,5 +736,6 @@ async def run_screening(
         candidates=final.get("candidates", []),
         findings=final.get("findings", []),
         questions=final.get("questions", []),
+        interviews=final.get("interviews", []),
         activity=final.get("activity", []),
     )

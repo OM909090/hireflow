@@ -25,13 +25,40 @@ Status must be exactly one of these four values, chosen by these rules:
 
 The distinction between "unverified" and "absent" matters and is often wrong.
 If ANY adjacent or partially relevant text exists, prefer "unverified".
-Reserve "absent" for genuine silence on the topic."""
+Reserve "absent" for genuine silence on the topic.
+
+THREE RULES THAT OVERRIDE NAIVE KEYWORD MATCHING:
+
+1. A SKILLS LIST IS A CLAIM, NOT EVIDENCE.
+   If a technology appears only in a "Skills" or "Technologies" list and is NOT
+   demonstrated anywhere in the Experience or Projects sections, the status is
+   "unverified", never "met". Say so in the reason, e.g. "Kubernetes appears in
+   the skills list but no experience or project demonstrates it." Real work
+   beats a keyword every time.
+
+2. "IN PRODUCTION" MEANS PRODUCTION.
+   When a requirement asks for production experience, evidence from a university
+   project, a personal project, a course, or local-only usage is at most
+   "partial", and usually "unverified". A capstone project that "uses Spring
+   Boot" does not satisfy "production experience with Spring Boot".
+
+3. JUDGE THE REQUIREMENT AS STATED, NOT OVERALL STRENGTH.
+   A candidate who is excellent in a different stack does not satisfy a
+   requirement they lack. Years in one language do NOT count toward a
+   requirement for a different language. If the role requires Java and the
+   candidate has one year of Java on a legacy service but seven years of Python,
+   the Java requirement is "partial" (thin, real) or "absent" — not "met" —
+   regardless of how strong they are overall. Do not reward adjacent strength."""
 
 EVIDENCE_RULE = """\
 evidence_quote must be a span of text COPIED CHARACTER-FOR-CHARACTER from the
 RESUME above. Do not paraphrase, summarise, reflow or correct it. Do not invent
 a quote. It must be at least 4 words long.
 If no suitable span exists, set evidence_quote to null.
+Prefer a quote from the Experience or Projects sections over one from a Skills
+list. If the only mention of the skill is in a Skills list, you may quote that
+list, but the status must then be "unverified" per rule 1 above, and
+location_hint must say "Skills list".
 A separate program will check your quote against the source document and will
 reject your finding if the quote cannot be located, so copying exactly is in
 your interest."""
@@ -45,15 +72,16 @@ JOB DESCRIPTION:
 {jd_text}
 ---
 
-Extract one requirement per bullet or sentence as the job description presents
-them. Keep the job's own grouping — if a single bullet says "schema design and
-query optimisation", that is ONE requirement, because that is how the employer
-scopes the skill. Only split a bullet when it bundles genuinely unrelated
-capabilities that a candidate could plausibly have one of and not the other.
+Extract requirements ONLY from the explicit requirement lists — sections titled
+Requirements, Must have, Preferred, Nice to have, Qualifications, or similar
+bulleted lists. IGNORE the mission statement, company/team description, and the
+narrative "you will…" responsibilities in the intro paragraph. A sentence like
+"You will design APIs and operate what you ship" is describing the job, not a
+screenable requirement, so do not extract it.
 
-Do not atomise. "Deploying and operating workloads on Kubernetes" is one
-requirement, not two. Over-splitting produces pedantic requirements that make a
-candidate look weaker than the employer intends.
+Take one requirement per bullet, keeping the job's own grouping — if a single
+bullet says "schema design and query optimisation", that is ONE requirement.
+Do not atomise and do not invent requirements the lists do not contain.
 
 For each requirement return:
   text         A single clear requirement, phrased as a capability.
@@ -104,6 +132,44 @@ Return ONLY this JSON:
   "findings": [{{"requirement_id": "REQ-01", "status": "met", "reason": "...",
   "missing_detail": null, "confidence": 0.9, "evidence_quote": "...",
   "location_hint": "..."}}]}}"""
+
+
+INTERVIEW_PROMPT = """\
+You are re-evaluating ONE requirement for a candidate after an interview.
+
+REQUIREMENT: {requirement_text}
+
+STATUS FROM RESUME: {prior_status}
+WHY (from resume): {prior_reason}
+
+INTERVIEW QUESTION THAT WAS ASKED:
+{question}
+
+CANDIDATE'S RECORDED ANSWER:
+---
+{answer}
+---
+
+Re-evaluate the requirement using the recorded answer as new evidence.
+
+{status_policy}
+
+Rules specific to interview evidence:
+- The answer is recorded testimony from the interview. Treat CONCRETE, SPECIFIC
+  claims as strong evidence: named tools, actions the candidate personally
+  performed, systems they operated, incidents they resolved, outcomes. If the
+  answer establishes the requirement with that kind of specificity, status
+  becomes "met".
+- Treat a VAGUE confirmation as insufficient. "Yes, I've used it" or "I'm
+  familiar with it" does not establish the requirement — that stays "unverified"
+  and you MUST provide a follow_up question that asks for the specific missing
+  detail.
+- evidence_quote must be copied CHARACTER-FOR-CHARACTER from the CANDIDATE'S
+  RECORDED ANSWER above (not from the resume). A program verifies it.
+
+Return ONLY this JSON:
+{{"new_status": "met", "reason": "...", "evidence_quote": "...",
+  "missing_detail": null, "follow_up": null}}"""
 
 
 QUESTIONS_PROMPT = """\
