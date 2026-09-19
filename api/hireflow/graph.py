@@ -413,10 +413,14 @@ async def verify_evidence(state: GraphState) -> dict:
 
     refused = sum(1 for a in acts if a.kind == "warn")
     verified = sum(1 for a in acts if a.kind == "verifier")
+    # Scope this explicitly to resume evidence. Job-description quotes are
+    # verified in the requirements node and counted separately, so an unscoped
+    # "N claims refused" here reads as a contradiction of the run total.
     acts.append(
         ev(
             "agent",
-            f"Verification complete · {verified} quotes located, {refused} claims refused",
+            f"Resume evidence checked · {verified} quotes located, "
+            f"{refused} refused in resumes",
         )
     )
     return {"findings": out, "activity": acts}

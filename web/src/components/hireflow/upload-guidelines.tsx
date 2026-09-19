@@ -70,21 +70,36 @@ function Section({
   );
 }
 
-export function UploadGuidelines({ className }: { className?: string }) {
+export function UploadGuidelines({
+  className,
+  children,
+}: {
+  className?: string;
+  /** Custom trigger content. When given, `className` fully styles the trigger. */
+  children?: React.ReactNode;
+}) {
   return (
     <Dialog>
       <DialogTrigger
-        className={cn(
-          "inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground/75 transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground",
-          className,
-        )}
+        className={
+          children
+            ? className
+            : cn(
+                "inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground/75 transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground",
+                className,
+              )
+        }
       >
-        <Info className="size-3.5" aria-hidden />
-        Supported formats &amp; best practices
+        {children ?? (
+          <>
+            <Info className="size-3.5" aria-hidden />
+            Supported formats &amp; best practices
+          </>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-h-[85vh] gap-0 overflow-y-auto p-0 sm:max-w-2xl">
-        <DialogHeader className="border-b border-border p-5">
+        <DialogHeader className="sticky top-0 z-10 border-b border-border bg-popover p-5">
           <DialogTitle className="text-lg">
             What to upload for the best results
           </DialogTitle>

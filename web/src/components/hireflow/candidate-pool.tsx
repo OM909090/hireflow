@@ -52,8 +52,8 @@ const BAND_META: Record<CandidateBand, { label: string; pill: string }> = {
 const EXAMPLES = [
   "Java + Spring Boot candidates with unverified Kubernetes",
   "candidates with more than 5 years",
-  "all must-haves verified",
   "who is missing Kafka",
+  "verified PostgreSQL",
 ];
 
 const PAGE_SIZE = 4;
@@ -140,8 +140,8 @@ export function CandidatePool() {
       list = list.filter((r) => {
         const y = r.yearsExperience;
         if (expFilter === "0-2") return y <= 2;
-        if (expFilter === "3-5") return y >= 3 && y <= 5;
-        return y > 5;
+        if (expFilter === "3-4") return y >= 3 && y <= 4;
+        return y >= 5;
       });
     }
     if (bandFilter !== "any") list = list.filter((r) => r.band === bandFilter);
@@ -211,7 +211,12 @@ export function CandidatePool() {
     );
   }
 
-  const selectedRows = rows.filter((r) => selected.includes(r.id));
+  // Compare only what the current view actually contains, so the count in the
+  // bar always matches the checkboxes on screen and nothing hidden sneaks in.
+  const visibleIds = new Set(filtered.map((r) => r.id));
+  const selectedVisible = selected.filter((id) => visibleIds.has(id));
+  const hiddenSelected = selected.length - selectedVisible.length;
+  const selectedRows = filtered.filter((r) => selectedVisible.includes(r.id));
 
   return (
     <>
@@ -263,20 +268,25 @@ export function CandidatePool() {
       {/* Examples / interpretation */}
       {nl ? (
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground">Interpreted as:</span>
-          {nl.chips.length ? (
-            nl.chips.map((c: CandidateQueryChip) => (
-              <span
-                key={`${c.label}-${c.value}`}
-                className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-accent px-2.5 py-1 text-xs font-medium text-accent-foreground"
-              >
-                <span className="font-semibold">{c.label}:</span>
-                {c.value}
+          {nl.understood ? (
+            <>
+              <span className="text-xs text-muted-foreground">
+                Interpreted as:
               </span>
-            ))
+              {nl.chips.map((c: CandidateQueryChip) => (
+                <span
+                  key={`${c.label}-${c.value}`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-accent px-2.5 py-1 text-xs font-medium text-accent-foreground"
+                >
+                  <span className="font-semibold">{c.label}:</span>
+                  {c.value}
+                </span>
+              ))}
+            </>
           ) : (
-            <span className="text-xs text-muted-foreground">
-              free-text search
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-unverified-border)] bg-[var(--color-unverified-bg)] px-2.5 py-1 text-xs font-medium text-[var(--color-unverified)]">
+              <AlertTriangle className="size-3.5" aria-hidden />
+              Couldn&apos;t interpret this query
             </span>
           )}
           <span className="ml-auto text-xs text-muted-foreground">
@@ -306,10 +316,11 @@ export function CandidatePool() {
             setExpFilter(v);
             setPage(0);
           }}
+          label="Filter by experience"
           options={[
             ["any", "Any experience"],
             ["0-2", "0–2 years"],
-            ["3-5", "3–5 years"],
+            ["3-4", "3–4 years"],
             ["5+", "5+ years"],
           ]}
         />
@@ -319,6 +330,7 @@ export function CandidatePool() {
             setBandFilter(v);
             setPage(0);
           }}
+          label="Filter by evidence band"
           options={[
             ["any", "Any band"],
             ["strong", "Strong"],
@@ -332,6 +344,7 @@ export function CandidatePool() {
             setStateFilter(v);
             setPage(0);
           }}
+          label="Filter by coverage"
           options={[
             ["any", "Any coverage"],
             ["gaps", "Has open gaps"],
@@ -344,6 +357,7 @@ export function CandidatePool() {
             setInterviewFilter(v);
             setPage(0);
           }}
+          label="Filter by interview status"
           options={[
             ["any", "Any interview status"],
             ["notstarted", "Not interviewed"],
@@ -369,7 +383,7 @@ export function CandidatePool() {
           label="Needs human validation"
           value={totalOpen}
           caption={`across ${filtered.filter((r) => r.open.length > 0).length} of ${filtered.length} candidates`}
-          note="Each is a requirement with related text but nothing that establishes it. Verify them in the AI Interview Agent."
+          note="Requirements the resume left unproven — either related text that stops short, or no evidence at all. Validate them with HireFlow AI."
         />
         <Panel className="p-5 lg:col-span-2">
           <div className="flex flex-wrap items-center gap-6">
@@ -392,12 +406,17 @@ export function CandidatePool() {
       </div>
 
       {/* Comparison */}
-      {selected.length >= 2 && (
+      {selectedVisible.length >= 2 && (
         <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-primary/30 bg-accent/60 px-4 py-2.5">
           <GitCompare className="size-4 text-primary" aria-hidden />
           <span className="text-sm font-medium">
-            {selected.length} selected
+            {selectedVisible.length} selected
           </span>
+          {hiddenSelected > 0 && (
+            <span className="text-xs text-muted-foreground">
+              ({hiddenSelected} more hidden by the current filters)
+            </span>
+          )}
           <button
             type="button"
             onClick={() => setShowCompare((v) => !v)}
@@ -413,7 +432,7 @@ export function CandidatePool() {
             }}
             className="rounded-full border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:bg-card"
           >
-            Clear
+            Clear selection
           </button>
         </div>
       )}
@@ -425,9 +444,22 @@ export function CandidatePool() {
       {/* Results */}
       {pageRows.length === 0 ? (
         <Panel className="mt-4 p-10 text-center">
-          <p className="text-sm text-muted-foreground">
-            No candidates match. Adjust the filters or clear the query.
+          <p className="text-sm font-medium">No candidates match</p>
+          <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
+            {nl && !nl.understood
+              ? "That query could not be interpreted. Try a skill, a requirement state (verified / unverified), an experience range, or a candidate name."
+              : "Every active constraint has to hold at once. Loosen one, or reset below."}
           </p>
+          {hasFilters && (
+            <button
+              type="button"
+              onClick={clearAll}
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent"
+            >
+              <X className="size-3.5" aria-hidden />
+              Clear search and filters
+            </button>
+          )}
         </Panel>
       ) : (
         <div className="mt-4 space-y-4">
@@ -496,16 +528,19 @@ function FilterSelect({
   value,
   onChange,
   options,
+  label,
 }: {
   value: string;
   onChange: (v: string) => void;
   options: [string, string][];
+  label: string;
 }) {
   return (
     <select
       value={value}
+      aria-label={label}
       onChange={(e) => onChange(e.target.value)}
-      className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground/80 outline-none focus:border-ring"
+      className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground/80 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
     >
       {options.map(([v, label]) => (
         <option key={v} value={v}>
@@ -526,7 +561,6 @@ function CandidateCard({
   onToggle: () => void;
 }) {
   const meta = BAND_META[row.band];
-  const met = row.findings.filter((f) => f.status === "met");
 
   return (
     <Panel className={cn("overflow-hidden", selected && "ring-2 ring-primary/40")}>
@@ -602,10 +636,14 @@ function CandidateCard({
         </Link>
       </div>
 
-      {met.length > 0 && (
+      {/* Always shown — the summary matters most for the weakest candidates. */}
+      {row.aiSummary && (
         <div className="border-t border-border bg-muted/40 px-5 py-3">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Sparkles className="size-3.5 text-primary" aria-hidden />
+          <div className="flex items-start gap-2">
+            <Sparkles
+              className="mt-0.5 size-3.5 shrink-0 text-primary"
+              aria-hidden
+            />
             <span className="text-[13px] leading-relaxed text-foreground/85">
               {row.aiSummary}
             </span>

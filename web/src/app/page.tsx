@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import {
   Activity,
   AlertTriangle,
+  ArrowLeft,
   ArrowRight,
   ArrowUpRight,
   BadgeCheck,
@@ -99,14 +100,24 @@ export default function IntakePage() {
               Run screening
             </button>
           ) : phase === "done" ? (
-            <button
-              type="button"
-              onClick={() => setPhase("running")}
-              className={buttonVariants({ variant: "outline", size: "lg" })}
-            >
-              <RotateCcw className="size-4" aria-hidden />
-              Run again
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setPhase("idle")}
+                className={buttonVariants({ variant: "outline", size: "lg" })}
+              >
+                <ArrowLeft className="size-4" aria-hidden />
+                Back to intake
+              </button>
+              <button
+                type="button"
+                onClick={() => setPhase("running")}
+                className={buttonVariants({ size: "lg" })}
+              >
+                <RotateCcw className="size-4" aria-hidden />
+                Run again
+              </button>
+            </div>
           ) : null
         }
       />
@@ -221,7 +232,11 @@ export default function IntakePage() {
                 />
                 <div className="mt-3 divide-y divide-border">
                   {candidates.map((c) => (
-                    <div key={c.id} className="flex items-center gap-3 px-5 py-3">
+                    <Link
+                      key={c.id}
+                      href={`/candidates/${c.id}`}
+                      className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-accent"
+                    >
                       <Avatar name={c.name} size="sm" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{c.name}</p>
@@ -230,16 +245,22 @@ export default function IntakePage() {
                         </p>
                       </div>
                       <span className="shrink-0 text-xs text-muted-foreground">
-                        {c.yearsExperience} yrs
+                        {c.yearsExperience === 0
+                          ? "<1 yr"
+                          : `${c.yearsExperience} yrs`}
                       </span>
-                    </div>
+                      <ArrowUpRight
+                        className="size-3.5 shrink-0 text-muted-foreground"
+                        aria-hidden
+                      />
+                    </Link>
                   ))}
                 </div>
                 <div className="p-5 pt-3">
-                  <div className="flex items-center justify-center gap-2 rounded-2xl border border-dashed border-input bg-muted/40 px-4 py-5 text-sm text-muted-foreground">
+                  <UploadGuidelines className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-input bg-muted/40 px-4 py-5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground">
                     <Upload className="size-4" aria-hidden />
-                    Drop more resumes
-                  </div>
+                    Add resumes — see accepted formats
+                  </UploadGuidelines>
                   <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2">
                     <UploadGuidelines />
                     <span className="font-mono text-[11px] text-muted-foreground">
@@ -298,6 +319,9 @@ export default function IntakePage() {
 
 // ── done state ────────────────────────────────────────────────────────────
 
+/** Claims the verifier refused anywhere in the run (includes JD quote checks). */
+const refusedInRun = activity.filter((a) => a.kind === "warn").length;
+
 function ResultsSummary({
   stats,
 }: {
@@ -337,7 +361,7 @@ function ResultsSummary({
   ];
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className="space-y-4">
       <Panel className="p-5">
         <div className="flex items-center gap-3">
           <span className="grid size-10 place-items-center rounded-2xl bg-[var(--color-met-bg)] text-[var(--color-met)]">
@@ -386,18 +410,27 @@ function ResultsSummary({
         </div>
       </Panel>
 
-      {stats.refused === 0 && (
-        <Panel className="p-4">
-          <p className="text-xs leading-relaxed text-muted-foreground">
-            <span className="font-semibold text-foreground/80">
-              Every quote in this run was located in its source document.
-            </span>{" "}
-            The verifier refused nothing this time — but the refusal path is real
-            and unit-tested. What it guarantees is that a claim which{" "}
-            <em>cannot</em> be grounded is never shown as met.
-          </p>
-        </Panel>
-      )}
+      <Panel className="p-4">
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          <span className="font-semibold text-foreground/80">
+            {stats.refused === 0
+              ? "Every resume quote in this run was located in its source document."
+              : `${stats.refused} resume quote${stats.refused === 1 ? "" : "s"} could not be located and were refused.`}
+          </span>{" "}
+          {refusedInRun > 0 && (
+            <>
+              The verifier also refused {refusedInRun} claim
+              {refusedInRun === 1 ? "" : "s"} elsewhere in the run — see the{" "}
+              <Link href="/activity" className="underline">
+                full trace
+              </Link>
+              .{" "}
+            </>
+          )}
+          What the check guarantees is that a claim which <em>cannot</em> be
+          grounded in its source is never shown as met.
+        </p>
+      </Panel>
     </div>
   );
 }

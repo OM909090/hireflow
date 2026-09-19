@@ -197,7 +197,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             })}
           </div>
 
-          <main className="min-h-0 min-w-0 flex-1 overflow-y-auto bg-muted/35 p-4 sm:p-6">
+          {/* `relative` matters: screen-reader-only spans inside page content are
+              absolutely positioned, and without a positioned ancestor their
+              containing block is the initial one — which lets them extend the
+              document and make the whole shell scroll. */}
+          <main className="relative min-h-0 min-w-0 flex-1 overflow-y-auto bg-muted/35 p-4 sm:p-6">
             {children}
           </main>
 

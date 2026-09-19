@@ -106,7 +106,7 @@ export default function RequirementsPage() {
                       {r.text}
                     </h2>
 
-                    <div className="mt-3 rounded-2xl border-l-2 border-primary/30 bg-muted/60 py-2 pr-3 pl-3">
+                    <div className="mt-3 rounded-lg border-l-2 border-primary/40 bg-muted/60 py-2 pr-3 pl-3">
                       <Eyebrow className="flex items-center gap-1.5">
                         <Quote className="size-3" aria-hidden />
                         Derived from the job description
@@ -139,7 +139,10 @@ export default function RequirementsPage() {
           })}
         </div>
 
-        <Panel className="lg:sticky lg:top-4 lg:self-start">
+        {/* Capped to the scrollport and internally scrollable, otherwise the
+            pinned panel is taller than the viewport and its footnote can never
+            be reached on a laptop screen. */}
+        <Panel className="lg:sticky lg:top-4 lg:max-h-[calc(100dvh-11rem)] lg:self-start lg:overflow-y-auto">
           <PanelHead
             title="Source document"
             subtitle={job.sourceDoc}
@@ -153,7 +156,12 @@ export default function RequirementsPage() {
             }
           />
           <div className="p-5">
-            <pre className="evidence-quote max-h-[540px] overflow-auto rounded-2xl bg-muted/60 p-4 whitespace-pre-wrap text-foreground/80">
+            <pre
+              tabIndex={0}
+              role="region"
+              aria-label="Job description source text"
+              className="evidence-quote max-h-[min(34rem,42vh)] overflow-auto rounded-2xl bg-muted/60 p-4 break-words whitespace-pre-wrap text-foreground/80 focus-visible:outline-2 focus-visible:outline-ring"
+            >
               {job.rawText}
             </pre>
             <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">

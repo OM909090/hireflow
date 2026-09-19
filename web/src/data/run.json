@@ -3,9 +3,9 @@
     "id": "JOB-001",
     "title": "Senior Backend Engineer",
     "company": "Northwind Commerce",
-    "location": "Bengaluru, India \u00b7 Hybrid",
+    "location": "Bengaluru, India · Hybrid",
     "sourceDoc": "senior-backend-engineer-java.md",
-    "rawText": "# Senior Backend Engineer\n\n**Northwind Commerce** \u2014 Bengaluru, India \u00b7 Hybrid\n\nWe are hiring a Senior Backend Engineer to own the services behind our checkout\nand payments platform. You will design APIs, model data, and operate what you\nship in production.\n\n## Requirements\n\n- At least 5 years of professional backend development experience\n- Strong Java\n- Production experience with Spring Boot\n- Designing and building REST APIs\n- PostgreSQL, including schema design and query optimisation\n- Docker\n\n## Preferred\n\n- Kubernetes in production\n- AWS\n- Kafka or another event-streaming platform\n- CI/CD pipelines\n"
+    "rawText": "# Senior Backend Engineer\n\n**Northwind Commerce** — Bengaluru, India · Hybrid\n\nWe are hiring a Senior Backend Engineer to own the services behind our checkout\nand payments platform. You will design APIs, model data, and operate what you\nship in production.\n\n## Requirements\n\n- At least 5 years of professional backend development experience\n- Strong Java\n- Production experience with Spring Boot\n- Designing and building REST APIs\n- PostgreSQL, including schema design and query optimisation\n- Docker\n\n## Preferred\n\n- Kubernetes in production\n- AWS\n- Kafka or another event-streaming platform\n- CI/CD pipelines\n"
   },
   "requirements": [
     {
@@ -73,7 +73,7 @@
     {
       "id": "C-01",
       "name": "Aman Verma",
-      "headline": "Software Engineer \u00b7 Java/Spring application development",
+      "headline": "Software Engineer · Java/Spring application development",
       "location": "New Delhi, India",
       "yearsExperience": 0,
       "sourceDoc": "aman-verma.md",
@@ -83,7 +83,7 @@
     {
       "id": "C-02",
       "name": "Neha Kapoor",
-      "headline": "Senior Backend Engineer \u00b7 Restaurant Discovery",
+      "headline": "Senior Backend Engineer · Restaurant Discovery",
       "location": "Gurugram, India",
       "yearsExperience": 7,
       "sourceDoc": "neha-kapoor.md",
@@ -93,7 +93,7 @@
     {
       "id": "C-03",
       "name": "Priya Sharma",
-      "headline": "Senior Backend Engineer \u00b7 Fintech",
+      "headline": "Senior Backend Engineer · Fintech",
       "location": "Bengaluru, India",
       "yearsExperience": 8,
       "sourceDoc": "priya-sharma.md",
@@ -103,7 +103,7 @@
     {
       "id": "C-04",
       "name": "Rahul Das",
-      "headline": "Backend Engineer \u00b7 Food delivery",
+      "headline": "Backend Engineer · Food delivery",
       "location": "Pune, India",
       "yearsExperience": 5,
       "sourceDoc": "rahul-das.md",
@@ -113,7 +113,7 @@
     {
       "id": "C-05",
       "name": "Vikram Reddy",
-      "headline": "Software Engineer \u00b7 Cloud-native donations platform",
+      "headline": "Software Engineer · Cloud-native donations platform",
       "location": "Hyderabad, India",
       "yearsExperience": 3,
       "sourceDoc": "vikram-reddy.md",
@@ -134,7 +134,7 @@
         {
           "quote": "Fixed bugs in a Java monolith and wrote unit tests.",
           "sourceDoc": "aman-verma.md",
-          "locationHint": "Experience \u2014 TechNest",
+          "locationHint": "Experience — TechNest",
           "verified": true
         }
       ],
@@ -153,7 +153,7 @@
         {
           "quote": "Fixed bugs in a Java monolith and wrote unit tests.",
           "sourceDoc": "aman-verma.md",
-          "locationHint": "Experience \u2014 TechNest",
+          "locationHint": "Experience — TechNest",
           "verified": true
         }
       ],
@@ -172,7 +172,7 @@
         {
           "quote": "Built a campus event management system using Spring Boot and Docker.",
           "sourceDoc": "aman-verma.md",
-          "locationHint": "Projects \u2014 Campus Event System",
+          "locationHint": "Projects — Campus Event System",
           "verified": true
         }
       ],
@@ -191,7 +191,7 @@
         {
           "quote": "Built a campus event management system using Spring Boot and Docker.",
           "sourceDoc": "aman-verma.md",
-          "locationHint": "Projects \u2014 Campus Event System",
+          "locationHint": "Projects — Campus Event System",
           "verified": true
         }
       ],
@@ -229,7 +229,7 @@
         {
           "quote": "Ran the application locally with Docker Compose.",
           "sourceDoc": "aman-verma.md",
-          "locationHint": "Projects \u2014 Campus Event System",
+          "locationHint": "Projects — Campus Event System",
           "verified": true
         }
       ],
@@ -310,7 +310,7 @@
         {
           "quote": "Seven years building backend services, primarily in Python and Django.",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -329,7 +329,7 @@
         {
           "quote": "Used Java for one year on a legacy billing service before moving to Python.",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -348,7 +348,7 @@
         {
           "quote": "Used Java for one year on a legacy billing service before moving to Python.",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -367,7 +367,7 @@
         {
           "quote": "Designed and built REST APIs for the restaurant discovery platform.",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -386,7 +386,7 @@
         {
           "quote": "Deep PostgreSQL schema design and query optimisation for high-traffic tables.",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -405,7 +405,7 @@
         {
           "quote": "Containerised services with Docker and ran them on Kubernetes in production on AWS EKS.",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -424,7 +424,7 @@
         {
           "quote": "ran them on Kubernetes in production on AWS EKS",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -443,7 +443,7 @@
         {
           "quote": "Owned the AWS infrastructure for the discovery team.",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -474,7 +474,7 @@
         {
           "quote": "Containerised services with Docker and ran them on Kubernetes in production on AWS EKS.",
           "sourceDoc": "neha-kapoor.md",
-          "locationHint": "Experience \u2014 Zomato",
+          "locationHint": "Experience — Zomato",
           "verified": true
         }
       ],
@@ -493,7 +493,7 @@
         {
           "quote": "Built payment services in Java and Spring Boot for six years.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -512,7 +512,7 @@
         {
           "quote": "Built payment services in Java and Spring Boot for six years.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -531,7 +531,7 @@
         {
           "quote": "Dockerised all Spring Boot services and ran them in staging and production.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -550,7 +550,7 @@
         {
           "quote": "Designed and built REST APIs serving over 2 million requests per month.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -569,7 +569,7 @@
         {
           "quote": "Optimised the PostgreSQL schema and queries for the settlement ledger, cutting p99 latency from 720ms to 90ms.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -588,7 +588,7 @@
         {
           "quote": "Dockerised all Spring Boot services and ran them in staging and production.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -607,7 +607,7 @@
         {
           "quote": "Deployed services to AWS ECS with blue-green releases.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -626,7 +626,7 @@
         {
           "quote": "Deployed services to AWS ECS with blue-green releases.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -645,7 +645,7 @@
         {
           "quote": "Built Kafka event pipelines for settlement reconciliation across four consumer groups.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -664,7 +664,7 @@
         {
           "quote": "Set up the CI/CD pipeline in GitHub Actions for the payments team.",
           "sourceDoc": "priya-sharma.md",
-          "locationHint": "Experience \u2014 Razorpay",
+          "locationHint": "Experience — Razorpay",
           "verified": true
         }
       ],
@@ -683,7 +683,7 @@
         {
           "quote": "Five years building backend systems in Java.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -702,7 +702,7 @@
         {
           "quote": "Five years building backend systems in Java.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -721,7 +721,7 @@
         {
           "quote": "Built Spring Boot microservices for the order service, running in production.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -740,7 +740,7 @@
         {
           "quote": "Designed REST APIs for internal services and partner integrations.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -759,7 +759,7 @@
         {
           "quote": "Modelled and queried data in PostgreSQL for the order and delivery domains.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -778,7 +778,7 @@
         {
           "quote": "Containerised Spring Boot microservices using Docker and deployed them to AWS.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -797,7 +797,7 @@
         {
           "quote": "Containerised Spring Boot microservices using Docker and deployed them to AWS.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -816,7 +816,7 @@
         {
           "quote": "Containerised Spring Boot microservices using Docker and deployed them to AWS.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -847,7 +847,7 @@
         {
           "quote": "Containerised Spring Boot microservices using Docker and deployed them to AWS.",
           "sourceDoc": "rahul-das.md",
-          "locationHint": "Experience \u2014 Swiggy",
+          "locationHint": "Experience — Swiggy",
           "verified": true
         }
       ],
@@ -866,7 +866,7 @@
         {
           "quote": "Three years of software engineering.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -885,7 +885,7 @@
         {
           "quote": "Worked on scalable cloud-native applications using Java and microservices.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -904,7 +904,7 @@
         {
           "quote": "Worked on scalable cloud-native applications using Java and microservices.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -923,7 +923,7 @@
         {
           "quote": "Contributed to REST API development for the donations platform.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -954,7 +954,7 @@
         {
           "quote": "Worked on scalable cloud-native applications using Java and microservices.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -973,7 +973,7 @@
         {
           "quote": "Worked on scalable cloud-native applications using Java and microservices.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -992,7 +992,7 @@
         {
           "quote": "Worked on scalable cloud-native applications using Java and microservices.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -1011,7 +1011,7 @@
         {
           "quote": "Worked on scalable cloud-native applications using Java and microservices.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -1030,7 +1030,7 @@
         {
           "quote": "Worked on scalable cloud-native applications using Java and microservices.",
           "sourceDoc": "vikram-reddy.md",
-          "locationHint": "Experience \u2014 Ketto",
+          "locationHint": "Experience — Ketto",
           "verified": true
         }
       ],
@@ -1124,7 +1124,7 @@
       "candidateId": "C-03",
       "requirementId": "REQ-07",
       "question": "Your resume describes deploying production workloads with AWS ECS; have you also deployed or operated workloads in a production Kubernetes environment? Please describe the systems involved, your responsibilities, and how you handled deployment, scaling, monitoring, and troubleshooting.",
-      "rationale": "This distinguishes the candidate\u2019s demonstrated production container experience with ECS from the unverified requirement for hands-on production Kubernetes experience.",
+      "rationale": "This distinguishes the candidate’s demonstrated production container experience with ECS from the unverified requirement for hands-on production Kubernetes experience.",
       "followUp": "Which Kubernetes platform and tools did you use, and can you walk through a specific production incident or operational challenge you personally resolved?"
     },
     {
@@ -1256,7 +1256,7 @@
     {
       "id": "a001",
       "kind": "agent",
-      "message": "Run started \u00b7 JOB-001 \u00b7 Senior Backend Engineer",
+      "message": "Run started · JOB-001 · Senior Backend Engineer",
       "at": "14:05:18"
     },
     {
@@ -1274,397 +1274,397 @@
     {
       "id": "a009",
       "kind": "agent",
-      "message": "Parsed job description \u2192 10 requirements (6 hard, 4 soft)",
+      "message": "Parsed job description → 10 requirements (6 hard, 4 soft)",
       "at": "14:05:43"
     },
     {
       "id": "a004",
       "kind": "warn",
-      "message": "REQ-02 \u00b7 source quote not found in job description",
+      "message": "REQ-02 · source quote not found in job description",
       "at": "14:05:43"
     },
     {
       "id": "a005",
       "kind": "warn",
-      "message": "REQ-06 \u00b7 source quote not found in job description",
+      "message": "REQ-06 · source quote not found in job description",
       "at": "14:05:43"
     },
     {
       "id": "a006",
       "kind": "warn",
-      "message": "REQ-07 \u00b7 source quote not found in job description",
+      "message": "REQ-07 · source quote not found in job description",
       "at": "14:05:43"
     },
     {
       "id": "a007",
       "kind": "warn",
-      "message": "REQ-08 \u00b7 source quote not found in job description",
+      "message": "REQ-08 · source quote not found in job description",
       "at": "14:05:43"
     },
     {
       "id": "a008",
       "kind": "warn",
-      "message": "REQ-10 \u00b7 source quote not found in job description",
+      "message": "REQ-10 · source quote not found in job description",
       "at": "14:05:43"
     },
     {
       "id": "a010",
       "kind": "agent",
-      "message": "C-01 Aman Verma \u00b7 proposed evidence for 10 requirements",
+      "message": "C-01 Aman Verma · proposed evidence for 10 requirements",
       "at": "14:06:27"
     },
     {
       "id": "a011",
       "kind": "agent",
-      "message": "C-02 Neha Kapoor \u00b7 proposed evidence for 10 requirements",
+      "message": "C-02 Neha Kapoor · proposed evidence for 10 requirements",
       "at": "14:06:27"
     },
     {
       "id": "a012",
       "kind": "agent",
-      "message": "C-03 Priya Sharma \u00b7 proposed evidence for 10 requirements",
+      "message": "C-03 Priya Sharma · proposed evidence for 10 requirements",
       "at": "14:06:27"
     },
     {
       "id": "a013",
       "kind": "agent",
-      "message": "C-04 Rahul Das \u00b7 proposed evidence for 10 requirements",
+      "message": "C-04 Rahul Das · proposed evidence for 10 requirements",
       "at": "14:06:27"
     },
     {
       "id": "a014",
       "kind": "agent",
-      "message": "C-05 Vikram Reddy \u00b7 proposed evidence for 10 requirements",
+      "message": "C-05 Vikram Reddy · proposed evidence for 10 requirements",
       "at": "14:06:27"
     },
     {
       "id": "a015",
       "kind": "verifier",
-      "message": "C-01 REQ-01 \u00b7 quote located in aman-verma.md (exact) \u2192 verified",
+      "message": "C-01 REQ-01 · quote located in aman-verma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a016",
       "kind": "verifier",
-      "message": "C-01 REQ-02 \u00b7 quote located in aman-verma.md (exact) \u2192 verified",
+      "message": "C-01 REQ-02 · quote located in aman-verma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a017",
       "kind": "verifier",
-      "message": "C-01 REQ-03 \u00b7 quote located in aman-verma.md (exact) \u2192 verified",
+      "message": "C-01 REQ-03 · quote located in aman-verma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a018",
       "kind": "verifier",
-      "message": "C-01 REQ-04 \u00b7 quote located in aman-verma.md (exact) \u2192 verified",
+      "message": "C-01 REQ-04 · quote located in aman-verma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a019",
       "kind": "verifier",
-      "message": "C-01 REQ-05 \u00b7 quote located in aman-verma.md (exact) \u2192 verified",
+      "message": "C-01 REQ-05 · quote located in aman-verma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a020",
       "kind": "verifier",
-      "message": "C-01 REQ-06 \u00b7 quote located in aman-verma.md (exact) \u2192 verified",
+      "message": "C-01 REQ-06 · quote located in aman-verma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a021",
       "kind": "verifier",
-      "message": "C-01 REQ-07 \u00b7 quote located in aman-verma.md (exact) \u2192 verified",
+      "message": "C-01 REQ-07 · quote located in aman-verma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a022",
       "kind": "verifier",
-      "message": "C-01 REQ-08 \u00b7 quote located in aman-verma.md (exact) \u2192 verified",
+      "message": "C-01 REQ-08 · quote located in aman-verma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a023",
       "kind": "verifier",
-      "message": "C-02 REQ-01 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-01 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a024",
       "kind": "verifier",
-      "message": "C-02 REQ-02 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-02 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a025",
       "kind": "verifier",
-      "message": "C-02 REQ-03 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-03 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a026",
       "kind": "verifier",
-      "message": "C-02 REQ-04 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-04 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a027",
       "kind": "verifier",
-      "message": "C-02 REQ-05 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-05 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a028",
       "kind": "verifier",
-      "message": "C-02 REQ-06 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-06 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a029",
       "kind": "verifier",
-      "message": "C-02 REQ-07 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-07 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a030",
       "kind": "verifier",
-      "message": "C-02 REQ-08 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-08 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a031",
       "kind": "verifier",
-      "message": "C-02 REQ-10 \u00b7 quote located in neha-kapoor.md (exact) \u2192 verified",
+      "message": "C-02 REQ-10 · quote located in neha-kapoor.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a032",
       "kind": "verifier",
-      "message": "C-03 REQ-01 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-01 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a033",
       "kind": "verifier",
-      "message": "C-03 REQ-02 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-02 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a034",
       "kind": "verifier",
-      "message": "C-03 REQ-03 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-03 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a035",
       "kind": "verifier",
-      "message": "C-03 REQ-04 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-04 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a036",
       "kind": "verifier",
-      "message": "C-03 REQ-05 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-05 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a037",
       "kind": "verifier",
-      "message": "C-03 REQ-06 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-06 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a038",
       "kind": "verifier",
-      "message": "C-03 REQ-07 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-07 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a039",
       "kind": "verifier",
-      "message": "C-03 REQ-08 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-08 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a040",
       "kind": "verifier",
-      "message": "C-03 REQ-09 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-09 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a041",
       "kind": "verifier",
-      "message": "C-03 REQ-10 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "message": "C-03 REQ-10 · quote located in priya-sharma.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a042",
       "kind": "verifier",
-      "message": "C-04 REQ-01 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-01 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a043",
       "kind": "verifier",
-      "message": "C-04 REQ-02 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-02 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a044",
       "kind": "verifier",
-      "message": "C-04 REQ-03 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-03 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a045",
       "kind": "verifier",
-      "message": "C-04 REQ-04 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-04 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a046",
       "kind": "verifier",
-      "message": "C-04 REQ-05 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-05 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a047",
       "kind": "verifier",
-      "message": "C-04 REQ-06 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-06 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a048",
       "kind": "verifier",
-      "message": "C-04 REQ-07 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-07 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a049",
       "kind": "verifier",
-      "message": "C-04 REQ-08 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-08 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a050",
       "kind": "verifier",
-      "message": "C-04 REQ-10 \u00b7 quote located in rahul-das.md (exact) \u2192 verified",
+      "message": "C-04 REQ-10 · quote located in rahul-das.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a051",
       "kind": "verifier",
-      "message": "C-05 REQ-01 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-01 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a052",
       "kind": "verifier",
-      "message": "C-05 REQ-02 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-02 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a053",
       "kind": "verifier",
-      "message": "C-05 REQ-03 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-03 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a054",
       "kind": "verifier",
-      "message": "C-05 REQ-04 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-04 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a055",
       "kind": "verifier",
-      "message": "C-05 REQ-06 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-06 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a056",
       "kind": "verifier",
-      "message": "C-05 REQ-07 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-07 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a057",
       "kind": "verifier",
-      "message": "C-05 REQ-08 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-08 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a058",
       "kind": "verifier",
-      "message": "C-05 REQ-09 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-09 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a059",
       "kind": "verifier",
-      "message": "C-05 REQ-10 \u00b7 quote located in vikram-reddy.md (exact) \u2192 verified",
+      "message": "C-05 REQ-10 · quote located in vikram-reddy.md (exact) → verified",
       "at": "14:06:27"
     },
     {
       "id": "a060",
       "kind": "agent",
-      "message": "Verification complete \u00b7 45 quotes located, 0 claims refused",
+      "message": "Resume evidence checked · 45 quotes located, 0 refused in resumes",
       "at": "14:06:27"
     },
     {
       "id": "a061",
       "kind": "agent",
-      "message": "C-01 \u00b7 wrote 7 validation question(s)",
+      "message": "C-01 · wrote 7 validation question(s)",
       "at": "14:07:32"
     },
     {
       "id": "a062",
       "kind": "agent",
-      "message": "C-02 \u00b7 wrote 3 validation question(s)",
+      "message": "C-02 · wrote 3 validation question(s)",
       "at": "14:07:32"
     },
     {
       "id": "a063",
       "kind": "agent",
-      "message": "C-03 \u00b7 wrote 1 validation question(s)",
+      "message": "C-03 · wrote 1 validation question(s)",
       "at": "14:07:32"
     },
     {
       "id": "a064",
       "kind": "agent",
-      "message": "C-04 \u00b7 wrote 3 validation question(s)",
+      "message": "C-04 · wrote 3 validation question(s)",
       "at": "14:07:32"
     },
     {
       "id": "a065",
       "kind": "agent",
-      "message": "C-05 \u00b7 wrote 7 validation question(s)",
+      "message": "C-05 · wrote 7 validation question(s)",
       "at": "14:07:32"
     },
     {
       "id": "a066",
       "kind": "verifier",
-      "message": "C-04 REQ-07 \u00b7 interview answer verified \u2192 met",
+      "message": "C-04 REQ-07 · interview answer verified → met",
       "at": "14:08:00"
     },
     {
       "id": "a067",
       "kind": "agent",
-      "message": "C-04 REQ-09 \u00b7 absent \u2192 unverified after interview",
+      "message": "C-04 REQ-09 · absent → unverified after interview",
       "at": "14:08:00"
     },
     {
       "id": "a068",
       "kind": "agent",
-      "message": "Interview evaluation complete \u00b7 2 answers \u00b7 2 requirement(s) updated",
+      "message": "Interview evaluation complete · 2 answers · 2 requirement(s) updated",
       "at": "14:08:00"
     },
     {
       "id": "a069",
       "kind": "agent",
-      "message": "Run complete \u00b7 50 findings \u00b7 21 require human validation",
+      "message": "Run complete · 50 findings · 21 require human validation",
       "at": "14:08:00"
     }
   ],

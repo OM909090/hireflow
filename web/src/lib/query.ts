@@ -297,6 +297,8 @@ export interface CandidateQueryResult {
   /** null = no constraints parsed (caller shows everything). */
   matchIds: string[] | null;
   empty: boolean;
+  /** False when the query could not be interpreted at all. */
+  understood: boolean;
 }
 
 /**
@@ -313,7 +315,7 @@ export function queryCandidates(
   },
 ): CandidateQueryResult {
   const q = query.trim().toLowerCase();
-  if (!q) return { chips: [], matchIds: null, empty: false };
+  if (!q) return { chips: [], matchIds: null, empty: false, understood: true };
 
   const statusMap = new Map(
     data.findings.map((f) => [`${f.candidateId}:${f.requirementId}`, f.status]),
@@ -406,14 +408,18 @@ export function queryCandidates(
         chips: [{ label: "Search", value: query.trim() }],
         matchIds: textMatches.map((c) => c.id),
         empty: false,
+        understood: true,
       };
     }
-    return { chips: [], matchIds: null, empty: false };
+    // Nothing parsed and nothing matched: say so rather than silently returning
+    // the whole pool as if it were a result set.
+    return { chips: [], matchIds: [], empty: true, understood: false };
   }
 
   return {
     chips,
     matchIds: matches.map((c) => c.id),
     empty: matches.length === 0,
+    understood: true,
   };
 }

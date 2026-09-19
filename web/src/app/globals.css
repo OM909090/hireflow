@@ -100,6 +100,21 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  /*
+   * Guaranteed focus indicator.
+   *
+   * The theme's --ring is a light pink; at the 50% alpha the component presets
+   * use it is effectively invisible on this light UI (and on pink buttons it
+   * disappears entirely). Keyboard users need one unmistakable, consistent
+   * indicator, so every focusable element gets a solid high-contrast outline
+   * regardless of what utility classes it carries.
+   */
+  :focus-visible {
+    outline: 2px solid var(--color-violet);
+    outline-offset: 2px;
+    border-radius: inherit;
+  }
   body {
     background-color: var(--color-field);
     background-image:

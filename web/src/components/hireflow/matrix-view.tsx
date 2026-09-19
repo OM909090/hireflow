@@ -65,6 +65,7 @@ export function MatrixView() {
       {/* Filters */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Select
+          label="Filter requirements by kind"
           value={kind}
           onChange={(v) => setKind(v as typeof kind)}
           options={[
@@ -74,14 +75,15 @@ export function MatrixView() {
           ]}
         />
         <Select
+          label="Filter requirements by status"
           value={status}
           onChange={(v) => setStatus(v as typeof status)}
           options={[
             ["all", "Any status"],
-            ["met", "Has Met"],
-            ["partial", "Has Partial"],
-            ["unverified", "Has Unverified"],
-            ["absent", "Has No-evidence"],
+            ["met", "Any Met"],
+            ["partial", "Any Partially met"],
+            ["unverified", "Any Unverified"],
+            ["absent", "Any No evidence found"],
           ]}
         />
         <span className="ml-auto text-xs text-muted-foreground">
@@ -91,17 +93,24 @@ export function MatrixView() {
       </div>
 
       <Panel className="overflow-hidden p-0">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-sm">
+        {/* The table owns its own scrolling. Setting overflow-x alone makes this
+            wrapper the sticky containing block while `main` does the actual
+            scrolling, which leaves the header cells nothing to stick to — so it
+            gets a bounded height and scrolls in both axes itself. */}
+        <div className="max-h-[calc(100dvh-23rem)] min-h-[16rem] overflow-auto">
+          {/* border-separate (not border-collapse): `position: sticky` does not
+              work on cells of a border-collapse table in Chrome, and the header
+              row must stay visible while the requirements scroll. */}
+          <table className="w-full border-separate border-spacing-0 text-sm">
             <thead>
               <tr>
-                <th className="sticky left-0 z-10 min-w-[280px] border-b border-border bg-card p-4 text-left align-bottom">
+                <th className="sticky top-0 left-0 z-20 min-w-[280px] border-b border-border bg-card p-4 text-left align-bottom">
                   <Eyebrow>Requirement</Eyebrow>
                 </th>
                 {cols.map(({ candidate: c, summary }) => (
                   <th
                     key={c.id}
-                    className="border-b border-l border-border bg-card p-3 text-center align-bottom"
+                    className="sticky top-0 z-10 border-b border-l border-border bg-card p-3 text-center align-bottom"
                   >
                     <Link
                       href={`/candidates/${c.id}`}
@@ -166,13 +175,13 @@ export function MatrixView() {
                         <Link
                           href={`/candidates/${c.id}`}
                           title={`${c.name} · ${r.id} · ${meta.label}\n${f.reason}`}
+                          aria-label={`${c.name}, ${r.id} ${r.text}: ${meta.label}. ${f.reason}`}
                           className={cn(
                             "mx-auto flex size-9 items-center justify-center rounded-xl transition-transform hover:scale-110",
                             cellClass[f.status],
                           )}
                         >
                           <Icon className="size-4.5" aria-hidden />
-                          <span className="sr-only">{meta.label}</span>
                         </Link>
                       </td>
                     );
@@ -238,16 +247,19 @@ function Select({
   value,
   onChange,
   options,
+  label,
 }: {
   value: string;
   onChange: (v: string) => void;
   options: [string, string][];
+  label: string;
 }) {
   return (
     <select
       value={value}
+      aria-label={label}
       onChange={(e) => onChange(e.target.value)}
-      className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground/80 outline-none focus:border-ring"
+      className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground/80"
     >
       {options.map(([v, label]) => (
         <option key={v} value={v}>

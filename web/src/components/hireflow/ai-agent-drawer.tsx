@@ -5,13 +5,12 @@ import {
   ArrowRight,
   BadgeCheck,
   CornerDownLeft,
-  HelpCircle,
   Loader2,
   MessageSquareQuote,
-  Mic,
   RefreshCw,
   ShieldQuestion,
   TriangleAlert,
+  X,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -37,7 +36,7 @@ import { Eyebrow, IdTag } from "./kit";
 import { StatusBadge } from "./status-badge";
 
 const HELP_ITEMS: { action: HelpAction; label: string }[] = [
-  { action: "why", label: "Why is this unverified?" },
+  { action: "why", label: "Why is this flagged?" },
   { action: "missing", label: "What evidence is missing?" },
   { action: "explain", label: "Explain this requirement" },
   { action: "followup", label: "Generate a follow-up" },
@@ -47,16 +46,19 @@ const HELP_ITEMS: { action: HelpAction; label: string }[] = [
 ];
 
 /**
- * AI Interview Agent — the recruiter's interview copilot.
+ * AI Interview Agent — an on-demand right-hand drawer.
  *
- * Every action in this panel is a real call to the connected model through
- * `/api/agent/*`. The agent is candidate-aware (all context is scoped to the
- * candidate and requirement in focus) and it owns the verification decision: the
- * recruiter conducts the conversation and records the answer, the model judges
- * the evidence, and the server refuses a promotion whose quote it cannot locate
- * in that answer. There is deliberately no manual "mark verified" control.
+ * It is deliberately NOT always open: the evidence workspace gets the full width
+ * until the recruiter asks for help, at which point the agent slides in from the
+ * right with the candidate and requirement already in context.
+ *
+ * Responsibility split: the recruiter runs the conversation and records the
+ * answer; the model judges the evidence; the server refuses any "met" promotion
+ * whose quote it cannot locate in that answer. There is no manual verify control.
  */
-export function AiInterviewAgent({
+export function AiAgentDrawer({
+  open,
+  onClose,
   candidate,
   jobTitle,
   requirements,
@@ -66,6 +68,81 @@ export function AiInterviewAgent({
   focusReqId,
   onFocus,
 }: {
+  open: boolean;
+  onClose: () => void;
+  candidate: Candidate;
+  jobTitle: string;
+  requirements: Requirement[];
+  findings: Finding[];
+  questions: InterviewQuestion[];
+  recordedAnswers: Record<string, string>;
+  focusReqId: string;
+  onFocus: (reqId: string) => void;
+}) {
+  // Escape to close.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        aria-hidden
+        className={cn(
+          "fixed inset-0 z-40 bg-foreground/10 transition-opacity duration-200 supports-backdrop-filter:backdrop-blur-[2px]",
+          open ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+      />
+
+      {/* Drawer */}
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label={`HireFlow AI interview assistant for ${candidate.name}`}
+        aria-hidden={!open}
+        className={cn(
+          "fixed top-0 right-0 z-50 flex h-dvh w-full flex-col border-l border-border bg-card shadow-2xl transition-transform duration-250 ease-out sm:w-[440px]",
+          open ? "translate-x-0" : "pointer-events-none translate-x-full",
+        )}
+      >
+        {open && (
+          <AgentBody
+            key={`${candidate.id}:${focusReqId}`}
+            onClose={onClose}
+            candidate={candidate}
+            jobTitle={jobTitle}
+            requirements={requirements}
+            findings={findings}
+            questions={questions}
+            recordedAnswers={recordedAnswers}
+            focusReqId={focusReqId}
+            onFocus={onFocus}
+          />
+        )}
+      </aside>
+    </>
+  );
+}
+
+function AgentBody({
+  onClose,
+  candidate,
+  jobTitle,
+  requirements,
+  findings,
+  questions,
+  recordedAnswers,
+  focusReqId,
+  onFocus,
+}: {
+  onClose: () => void;
   candidate: Candidate;
   jobTitle: string;
   requirements: Requirement[];
@@ -129,13 +206,13 @@ export function AiInterviewAgent({
     };
   }, []);
 
-  // Report whether the agent actually has model access, rather than asserting it.
   useEffect(() => {
     let alive = true;
     fetch("/api/agent/health")
       .then((r) => r.json())
       .then((d) => {
-        if (alive) setHealth({ configured: !!d.configured, model: d.model ?? null });
+        if (alive)
+          setHealth({ configured: !!d.configured, model: d.model ?? null });
       })
       .catch(() => {
         if (alive) setHealth({ configured: false, model: null });
@@ -145,7 +222,6 @@ export function AiInterviewAgent({
     };
   }, []);
 
-  /** Live statuses + activity, so the agent reasons about the current state. */
   const liveStatuses = useMemo(() => {
     const m: Record<string, FindingStatus> = {};
     for (const f of findings) m[f.requirementId] = f.status;
@@ -187,7 +263,6 @@ export function AiInterviewAgent({
     setResult(null);
     setAnalyzeError(null);
     startTimer();
-
     try {
       const evaluation = await analyzeInterviewAnswer({
         candidateId: candidate.id,
@@ -195,7 +270,6 @@ export function AiInterviewAgent({
         question: shownQuestion,
         answer,
       });
-
       record({
         id: newEventId(`VE-${candidate.id}-${focusReqId}`),
         candidateId: candidate.id,
@@ -211,7 +285,6 @@ export function AiInterviewAgent({
         at: nowIso(),
         verifiedBy: "HireFlow AI",
       });
-
       setResult(evaluation);
       setPhase("result");
     } catch (e) {
@@ -268,37 +341,39 @@ export function AiInterviewAgent({
   const verifiedLive = isVerifiedLive(candidate.id, focusReqId);
   const history = historyFor(candidate.id, focusReqId);
 
+  const state: "checking" | "ready" | "unconfigured" | "error" =
+    analyzeError || helpError
+      ? "error"
+      : health === null
+        ? "checking"
+        : health.configured
+          ? "ready"
+          : "unconfigured";
+
   return (
-    <div className="flex flex-col overflow-hidden rounded-3xl border border-border bg-card lg:sticky lg:top-4 lg:max-h-[calc(100dvh-7rem)]">
-      {/* Header */}
-      <div className="flex items-center gap-2.5 border-b border-border bg-gradient-to-br from-[var(--color-violet)]/10 to-transparent px-4 py-3">
+    <>
+      {/* Sticky header */}
+      <div className="flex shrink-0 items-center gap-2.5 border-b border-border bg-gradient-to-br from-[var(--color-violet)]/10 to-transparent px-4 py-3">
         <HireFlowGlyph size={18} className="text-primary" />
         <div className="min-w-0">
           <p className="text-sm font-semibold tracking-tight">HireFlow AI</p>
-          <p className="text-[11px] text-muted-foreground">Interview assistant</p>
+          <p className="truncate text-[11px] text-muted-foreground">
+            {candidate.name} · {jobTitle}
+          </p>
         </div>
-        <AgentStatusBadge
-          state={
-            analyzeError || helpError
-              ? "error"
-              : health === null
-                ? "checking"
-                : health.configured
-                  ? "ready"
-                  : "unconfigured"
-          }
-          model={health?.model ?? null}
-        />
+        <AgentStatusBadge state={state} model={health?.model ?? null} />
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close HireFlow AI"
+          className="grid size-8 shrink-0 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          <X className="size-4" aria-hidden />
+        </button>
       </div>
 
+      {/* Scrollable body */}
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
-        {/* Candidate context */}
-        <div>
-          <Eyebrow>Current candidate</Eyebrow>
-          <p className="mt-0.5 text-sm font-semibold">{candidate.name}</p>
-          <p className="text-xs text-muted-foreground">{jobTitle}</p>
-        </div>
-
         {/* Focus selector */}
         <div>
           <Eyebrow>Focus requirement</Eyebrow>
@@ -312,6 +387,7 @@ export function AiInterviewAgent({
                   key={r.id}
                   type="button"
                   onClick={() => onFocus(r.id)}
+                  title={`${r.id} — ${r.text}`}
                   className={cn(
                     "inline-flex items-center gap-1 rounded-full border px-2 py-1 font-mono text-[10px] font-bold transition-colors",
                     active
@@ -320,7 +396,6 @@ export function AiInterviewAgent({
                         ? "border-[var(--color-met-border)] bg-[var(--color-met-bg)] text-[var(--color-met)]"
                         : "border-border text-muted-foreground hover:bg-accent",
                   )}
-                  title={r.text}
                 >
                   {done && <BadgeCheck className="size-3" aria-hidden />}
                   {r.id}
@@ -348,7 +423,6 @@ export function AiInterviewAgent({
           </div>
         )}
 
-        {/* Suggested question */}
         {focusReq && !verifiedLive && (
           <div className="rounded-2xl bg-accent p-3">
             <div className="flex items-center gap-1.5">
@@ -377,26 +451,31 @@ export function AiInterviewAgent({
           </div>
         )}
 
-        {/* Answer + analyze */}
         {focusReq && (
           <div>
-            <Eyebrow className="flex items-center gap-1.5">
-              <MessageSquareQuote className="size-3.5" aria-hidden />
-              Candidate answer
-            </Eyebrow>
+            <label
+              htmlFor="agent-answer"
+              className="text-[10px] font-bold tracking-[0.08em] text-muted-foreground uppercase"
+            >
+              <span className="inline-flex items-center gap-1.5">
+                <MessageSquareQuote className="size-3.5" aria-hidden />
+                Candidate answer
+              </span>
+            </label>
             <textarea
+              id="agent-answer"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              rows={4}
+              rows={5}
               placeholder="Record or paste the candidate's answer…"
-              className="mt-1 w-full resize-none rounded-xl border border-input bg-muted/40 p-3 text-sm text-foreground outline-none focus:border-ring"
+              className="mt-1 w-full resize-y rounded-xl border border-input bg-muted/40 p-3 text-sm text-foreground outline-none focus:border-ring"
             />
             {phase !== "analyzing" && (
               <button
                 type="button"
                 onClick={analyze}
                 disabled={!answer.trim()}
-                className="mt-2 inline-flex items-center gap-1.5 rounded-full brand-gradient px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full brand-gradient px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
               >
                 <HireFlowGlyph size={14} />
                 Analyse answer
@@ -405,12 +484,11 @@ export function AiInterviewAgent({
           </div>
         )}
 
-        {/* Working — real elapsed time against a real model call */}
         {phase === "analyzing" && (
           <div className="flex items-center gap-2 rounded-2xl border border-border bg-muted/40 p-3 text-xs">
             <Loader2 className="size-4 animate-spin text-primary" aria-hidden />
             <span className="text-foreground">
-              HireFlow AI is evaluating the answer against {focusReqId}…
+              Evaluating the answer against {focusReqId}…
             </span>
             <span className="ml-auto font-mono tabular-nums text-muted-foreground">
               {elapsed.toFixed(1)}s
@@ -435,7 +513,6 @@ export function AiInterviewAgent({
           </div>
         )}
 
-        {/* Result */}
         {phase === "result" && result && (
           <div
             className={cn(
@@ -445,7 +522,7 @@ export function AiInterviewAgent({
                 : "border-[var(--color-unverified-border)] bg-[var(--color-unverified-bg)]",
             )}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Eyebrow>AI result</Eyebrow>
               <span className="ml-auto flex items-center gap-1.5">
                 <StatusBadge status={result.priorStatus} />
@@ -509,7 +586,6 @@ export function AiInterviewAgent({
           </div>
         )}
 
-        {/* Verification history */}
         {history.length > 0 && (
           <div>
             <Eyebrow>Verification history · {focusReqId}</Eyebrow>
@@ -541,12 +617,9 @@ export function AiInterviewAgent({
           </div>
         )}
 
-        {/* Ask HireFlow AI */}
+        {/* Ask */}
         <div className="rounded-2xl border border-border p-3">
-          <Eyebrow className="flex items-center gap-1.5">
-            <HelpCircle className="size-3.5" aria-hidden />
-            Ask HireFlow AI
-          </Eyebrow>
+          <Eyebrow>Ask about this candidate</Eyebrow>
 
           <form
             onSubmit={(e) => {
@@ -559,14 +632,14 @@ export function AiInterviewAgent({
             <input
               value={freeQuestion}
               onChange={(e) => setFreeQuestion(e.target.value)}
-              placeholder="Ask anything about this candidate…"
-              className="h-8 min-w-0 flex-1 rounded-lg border border-input bg-muted/40 px-2.5 text-xs outline-none focus:border-ring"
+              placeholder="Ask anything…"
+              className="h-9 min-w-0 flex-1 rounded-lg border border-input bg-muted/40 px-2.5 text-xs outline-none focus:border-ring"
               aria-label="Ask HireFlow AI about this candidate"
             />
             <button
               type="submit"
               disabled={!freeQuestion.trim() || helpBusy}
-              className="grid size-8 shrink-0 place-items-center rounded-lg brand-gradient text-white disabled:opacity-40"
+              className="grid size-9 shrink-0 place-items-center rounded-lg brand-gradient text-white disabled:opacity-40"
               aria-label="Send question"
             >
               <CornerDownLeft className="size-3.5" aria-hidden />
@@ -580,7 +653,7 @@ export function AiInterviewAgent({
                 type="button"
                 onClick={() => runHelp(h.action)}
                 disabled={helpBusy}
-                className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-foreground/75 transition-colors hover:border-primary/40 hover:bg-accent disabled:opacity-50"
+                className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-foreground/75 transition-colors hover:border-primary/40 hover:bg-accent disabled:opacity-50"
               >
                 {h.label}
               </button>
@@ -616,15 +689,13 @@ export function AiInterviewAgent({
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 border-t border-border bg-muted/40 px-4 py-2 text-[10px] text-muted-foreground">
-        <Mic className="size-3" aria-hidden />
+      <div className="shrink-0 border-t border-border bg-muted/40 px-4 py-2 text-[10px] text-muted-foreground">
         You run the conversation. HireFlow AI decides when the evidence verifies.
       </div>
-    </div>
+    </>
   );
 }
 
-/** Honest agent status: what model it is wired to, and whether calls are working. */
 function AgentStatusBadge({
   state,
   model,
@@ -646,7 +717,7 @@ function AgentStatusBadge({
     unconfigured: {
       dot: "bg-[var(--color-unverified)]",
       cls: "bg-[var(--color-unverified-bg)] text-[var(--color-unverified)]",
-      label: "no model configured",
+      label: "no model",
     },
     error: {
       dot: "bg-[var(--color-absent)]",
@@ -658,7 +729,7 @@ function AgentStatusBadge({
   return (
     <span
       className={cn(
-        "ml-auto inline-flex max-w-[52%] items-center gap-1 truncate rounded-full px-2 py-0.5 text-[10px] font-semibold",
+        "ml-auto inline-flex max-w-[44%] items-center gap-1 truncate rounded-full px-2 py-0.5 text-[10px] font-semibold",
         meta.cls,
       )}
       title={model ? `Agent model: ${model}` : undefined}
