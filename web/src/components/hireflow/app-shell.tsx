@@ -66,12 +66,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-5 lg:p-7">
-      <div className="mx-auto flex min-h-[calc(100vh-1.5rem)] max-w-[1500px] overflow-hidden rounded-[28px] border border-white/70 bg-card app-panel sm:min-h-[calc(100vh-2.5rem)] lg:min-h-[calc(100vh-3.5rem)]">
+    <div className="h-dvh overflow-hidden p-3 sm:p-5 lg:p-7">
+      <div className="mx-auto flex h-full max-w-[1500px] overflow-hidden rounded-[28px] border border-white/70 bg-card app-panel">
         {/* ── Icon rail ── */}
         <nav
           aria-label="Main"
-          className="hidden w-[76px] shrink-0 flex-col items-center gap-2 border-r border-border bg-card py-5 sm:flex"
+          className="hidden w-[76px] shrink-0 flex-col items-center gap-2 overflow-y-auto border-r border-border bg-card py-5 sm:flex"
         >
           <Link
             href="/"
@@ -123,9 +123,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
 
         {/* ── Main column ── */}
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           {/* Header */}
-          <header className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
+          <header className="flex shrink-0 flex-wrap items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
             <div className="flex min-w-0 items-center gap-2 text-sm">
               <span className="text-muted-foreground">HireFlow</span>
               <span className="text-border" aria-hidden>
@@ -188,7 +188,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </header>
 
           {/* Mobile rail */}
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border px-4 py-2 sm:hidden">
+          <div className="flex shrink-0 items-center gap-1.5 overflow-x-auto border-b border-border px-4 py-2 sm:hidden">
             {RAIL.map((item) => {
               const active = isActive(pathname, item.href);
               return (
@@ -208,12 +208,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             })}
           </div>
 
-          <main className="min-w-0 flex-1 bg-muted/35 p-4 sm:p-6">
+          <main className="min-h-0 min-w-0 flex-1 overflow-y-auto bg-muted/35 p-4 sm:p-6">
             {children}
           </main>
 
           {/* Provenance footer */}
-          <footer className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border bg-card px-4 py-3 text-[11px] text-muted-foreground sm:px-6">
+          <footer className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 border-t border-border bg-card px-4 py-3 text-[11px] text-muted-foreground sm:px-6">
             <span className="font-semibold text-foreground/70">HireFlow</span>
             <span>Evidence-backed candidate screening</span>
             <span className="ml-auto flex flex-wrap items-center gap-x-3 gap-y-1">

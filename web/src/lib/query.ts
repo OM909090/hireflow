@@ -102,7 +102,15 @@ function requirementScore(req: Requirement, qTokens: string[]): number {
   let score = 0;
   for (const t of qTokens) {
     if (reqTokens.has(t)) score += 2;
-    else if ([...reqTokens].some((r) => r.includes(t) || t.includes(r))) score += 1;
+    // Fuzzy fallback, but only for tokens long enough that a substring match is
+    // meaningful — otherwise short words like "at" spuriously match "matches".
+    else if (
+      [...reqTokens].some(
+        (r) =>
+          (t.length >= 4 && r.includes(t)) || (r.length >= 4 && t.includes(r)),
+      )
+    )
+      score += 1;
   }
   return score;
 }
@@ -216,8 +224,8 @@ export function runQuery(
 export const EXAMPLE_QUERIES = [
   "Who lacks Kubernetes evidence?",
   "Which requirements are unverified?",
-  "Who has FastAPI in production?",
+  "Who has Spring Boot experience?",
   "Strongest candidates",
-  "Who is missing a degree?",
-  "Show partial matches",
+  "Who is missing Kafka experience?",
+  "Show partial evidence",
 ];
