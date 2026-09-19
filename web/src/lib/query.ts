@@ -229,3 +229,191 @@ export const EXAMPLE_QUERIES = [
   "Who is missing Kafka experience?",
   "Show partial evidence",
 ];
+
+
+/* ── Candidate-pool query (capability 12, over structured candidate state) ──── */
+
+/** Human-readable skill label for a requirement, for interpretation chips. */
+const SKILL_LABELS = [
+  "Java",
+  "Spring Boot",
+  "REST",
+  "PostgreSQL",
+  "Docker",
+  "Kubernetes",
+  "AWS",
+  "Kafka",
+  "CI/CD",
+];
+
+function reqShortLabel(req: Requirement): string {
+  const text = req.text.toLowerCase();
+  for (const label of SKILL_LABELS) {
+    if (text.includes(label.toLowerCase())) return label;
+  }
+  if (text.includes("year")) return "Experience";
+  return req.id;
+}
+
+type ReqState = "verified" | "gap" | "partial" | "present";
+
+function stateLabel(s: ReqState): string {
+  return {
+    verified: "Verified",
+    gap: "Unverified / missing",
+    partial: "Partial",
+    present: "Present",
+  }[s];
+}
+
+function segmentState(segment: string): ReqState {
+  const toks = segment.toLowerCase();
+  if (GAP_WORDS.some((w) => new RegExp(`\\b${w}\\b`).test(toks))) return "gap";
+  if (/\bverified\b/.test(toks)) return "verified";
+  if (/\bpartial(ly)?\b/.test(toks)) return "partial";
+  return "present";
+}
+
+function statusSatisfies(status: FindingStatus, want: ReqState): boolean {
+  switch (want) {
+    case "verified":
+      return status === "met";
+    case "gap":
+      return status === "unverified" || status === "absent";
+    case "partial":
+      return status === "partial";
+    case "present":
+      return status === "met" || status === "partial";
+  }
+}
+
+export interface CandidateQueryChip {
+  label: string;
+  value: string;
+}
+
+export interface CandidateQueryResult {
+  chips: CandidateQueryChip[];
+  /** null = no constraints parsed (caller shows everything). */
+  matchIds: string[] | null;
+  empty: boolean;
+}
+
+/**
+ * Turn a plain-language pool query into a structured filter over candidate
+ * state. Reads the findings it is given — pass MERGED findings so that
+ * "verified Kubernetes" reflects interview verifications, not just the resume.
+ */
+export function queryCandidates(
+  query: string,
+  data: {
+    candidates: Candidate[];
+    requirements: Requirement[];
+    findings: Finding[];
+  },
+): CandidateQueryResult {
+  const q = query.trim().toLowerCase();
+  if (!q) return { chips: [], matchIds: null, empty: false };
+
+  const statusMap = new Map(
+    data.findings.map((f) => [`${f.candidateId}:${f.requirementId}`, f.status]),
+  );
+
+  const chips: CandidateQueryChip[] = [];
+
+  // Experience
+  let experienceMin: number | null = null;
+  const expMatch = q.match(
+    /(?:more than|over|at least|greater than|above)\s*(\d{1,2})|\b(\d{1,2})\s*\+?\s*years?/,
+  );
+  if (expMatch) {
+    const n = Number(expMatch[1] ?? expMatch[2]);
+    experienceMin = /more than|over|above|greater than/.test(q) ? n + 1 : n;
+    chips.push({ label: "Experience", value: `${experienceMin}+ years` });
+  }
+
+  // Name
+  let nameId: string | null = null;
+  for (const c of data.candidates) {
+    const first = c.name.split(" ")[0].toLowerCase();
+    if (q.includes(c.name.toLowerCase()) || new RegExp(`\\b${first}\\b`).test(q)) {
+      nameId = c.id;
+      chips.push({ label: "Name", value: c.name });
+      break;
+    }
+  }
+
+  // All must-haves verified
+  const allVerified =
+    /\ball\b/.test(q) &&
+    /(verified|must-have|mandatory|requirement)/.test(q);
+  if (allVerified) {
+    chips.push({ label: "Coverage", value: "all must-haves verified" });
+  }
+
+  // Requirement-state conditions, per clause
+  const segments = q.split(/,|\bwith\b|\bbut\b|\bhaving\b|\band\b/);
+  const conditions = new Map<string, ReqState>();
+  for (const seg of segments) {
+    const toks = tokenize(seg);
+    if (!toks.length) continue;
+    const state = segmentState(seg);
+    for (const r of data.requirements) {
+      if (requirementScore(r, toks) >= 2) conditions.set(r.id, state);
+    }
+  }
+  for (const [rid, state] of conditions) {
+    const r = data.requirements.find((x) => x.id === rid);
+    if (r) chips.push({ label: reqShortLabel(r), value: stateLabel(state) });
+  }
+
+  const hasConstraint =
+    experienceMin != null ||
+    nameId != null ||
+    allVerified ||
+    conditions.size > 0;
+
+  const hardIds = new Set(
+    data.requirements.filter((r) => r.kind === "hard").map((r) => r.id),
+  );
+
+  const matches = data.candidates.filter((c) => {
+    if (nameId && c.id !== nameId) return false;
+    if (experienceMin != null && c.yearsExperience < experienceMin) return false;
+    if (allVerified) {
+      const allHardMet = [...hardIds].every(
+        (rid) => statusMap.get(`${c.id}:${rid}`) === "met",
+      );
+      if (!allHardMet) return false;
+    }
+    for (const [rid, state] of conditions) {
+      const st = statusMap.get(`${c.id}:${rid}`) ?? "absent";
+      if (!statusSatisfies(st, state)) return false;
+    }
+    return true;
+  });
+
+  // Fallback: free-text search on name/headline when nothing structured parsed.
+  if (!hasConstraint) {
+    const textMatches = data.candidates.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.headline.toLowerCase().includes(q) ||
+        c.id.toLowerCase() === q,
+    );
+    if (textMatches.length) {
+      return {
+        chips: [{ label: "Search", value: query.trim() }],
+        matchIds: textMatches.map((c) => c.id),
+        empty: false,
+      };
+    }
+    return { chips: [], matchIds: null, empty: false };
+  }
+
+  return {
+    chips,
+    matchIds: matches.map((c) => c.id),
+    empty: matches.length === 0,
+  };
+}
