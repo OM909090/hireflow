@@ -4,11 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   BadgeCheck,
-  CornerDownLeft,
   Loader2,
-  MessageSquareQuote,
-  RefreshCw,
+  SendHorizontal,
   ShieldQuestion,
+  Sparkles,
   TriangleAlert,
   X,
 } from "lucide-react";
@@ -27,34 +26,23 @@ import {
   generateQuestion,
   newEventId,
   nowIso,
-  type AgentEvaluation,
-  type HelpAction,
 } from "@/lib/agent";
 import { useVerification } from "@/lib/verification-store";
 import { HireFlowGlyph } from "./logo";
-import { Eyebrow, IdTag } from "./kit";
 import { StatusBadge } from "./status-badge";
 
-const HELP_ITEMS: { action: HelpAction; label: string }[] = [
-  { action: "why", label: "Why is this flagged?" },
-  { action: "missing", label: "What evidence is missing?" },
-  { action: "explain", label: "Explain this requirement" },
-  { action: "followup", label: "Generate a follow-up" },
-  { action: "next", label: "What should I ask next?" },
-  { action: "summary", label: "Summarise candidate" },
-  { action: "progress", label: "Review interview progress" },
-];
-
 /**
- * AI Interview Agent — an on-demand right-hand drawer.
+ * AI Interview Agent — an on-demand right-side drawer, built as a single
+ * conversation.
  *
- * It is deliberately NOT always open: the evidence workspace gets the full width
- * until the recruiter asks for help, at which point the agent slides in from the
- * right with the candidate and requirement already in context.
- *
- * Responsibility split: the recruiter runs the conversation and records the
- * answer; the model judges the evidence; the server refuses any "met" promotion
- * whose quote it cannot locate in that answer. There is no manual verify control.
+ * One message thread (the only scroll region) and one composer. Both things the
+ * agent does flow through that composer:
+ *   • "Answer" mode  → the recorded answer is sent to the model, which decides
+ *      whether it verifies the focused requirement (and the server refuses any
+ *      "met" it cannot ground in the answer). Status updates live.
+ *   • "Ask" mode     → a free question about the candidate, answered from the
+ *      live per-candidate state.
+ * No manual "mark verified" control; the recruiter runs the conversation.
  */
 export function AiAgentDrawer({
   open,
@@ -79,7 +67,6 @@ export function AiAgentDrawer({
   focusReqId: string;
   onFocus: (reqId: string) => void;
 }) {
-  // Escape to close.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -91,7 +78,6 @@ export function AiAgentDrawer({
 
   return (
     <>
-      {/* Backdrop */}
       <div
         onClick={onClose}
         aria-hidden
@@ -100,8 +86,6 @@ export function AiAgentDrawer({
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
-
-      {/* Drawer */}
       <aside
         role="dialog"
         aria-modal="true"
@@ -113,8 +97,8 @@ export function AiAgentDrawer({
         )}
       >
         {open && (
-          <AgentBody
-            key={`${candidate.id}:${focusReqId}`}
+          <AgentChat
+            key={candidate.id}
             onClose={onClose}
             candidate={candidate}
             jobTitle={jobTitle}
@@ -131,7 +115,30 @@ export function AiAgentDrawer({
   );
 }
 
-function AgentBody({
+/* ── conversation model ─────────────────────────────────────────────────── */
+
+type Message =
+  | { id: string; role: "user"; text: string; tag?: string }
+  | { id: string; role: "ai"; kind: "text"; title?: string; body: string; model?: string }
+  | {
+      id: string;
+      role: "ai";
+      kind: "verdict";
+      reqId: string;
+      priorStatus: FindingStatus;
+      newStatus: FindingStatus;
+      outcome: "verified" | "insufficient";
+      reason: string;
+      evidenceQuote?: string | null;
+      evidenceSource: string;
+      followUp?: string | null;
+      model: string;
+      elapsedMs: number;
+    }
+  | { id: string; role: "ai"; kind: "pending"; label: string }
+  | { id: string; role: "ai"; kind: "error"; body: string };
+
+function AgentChat({
   onClose,
   candidate,
   jobTitle,
@@ -152,7 +159,7 @@ function AgentBody({
   focusReqId: string;
   onFocus: (reqId: string) => void;
 }) {
-  const { record, historyFor, eventsFor, isVerifiedLive } = useVerification();
+  const { record, isVerifiedLive } = useVerification();
 
   const reqById = useMemo(
     () => new Map(requirements.map((r) => [r.id, r])),
@@ -169,36 +176,38 @@ function AgentBody({
 
   const focusReq = reqById.get(focusReqId);
   const focusFinding = findingByReq.get(focusReqId);
-  const focusQuestion = questionByReq.get(focusReqId);
+  const focusOpen =
+    !!focusFinding &&
+    (focusFinding.status === "unverified" ||
+      focusFinding.status === "absent" ||
+      focusFinding.status === "partial");
 
-  const open = findings.filter(
-    (f) => f.status === "unverified" || f.status === "absent",
-  );
-
-  const [answer, setAnswer] = useState(() => recordedAnswers[focusReqId] ?? "");
-  const [phase, setPhase] = useState<"idle" | "analyzing" | "result">("idle");
-  const [result, setResult] = useState<AgentEvaluation | null>(null);
-  const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Message[]>(() => [
+    {
+      id: "seed",
+      role: "ai",
+      kind: "text",
+      body: focusReq
+        ? `I'm on ${focusReq.id} — “${focusReq.text}”, currently ${labelFor(focusFinding?.status ?? "absent")}. Paste ${candidate.name.split(" ")[0]}'s answer and I'll check whether it verifies, or switch to Ask and question me about this candidate.`
+        : `Ask me anything about ${candidate.name}.`,
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [mode, setMode] = useState<"answer" | "ask">(focusOpen ? "answer" : "ask");
+  const [busy, setBusy] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-
-  const [question, setQuestion] = useState<string | null>(null);
-  const [questionBusy, setQuestionBusy] = useState(false);
-
-  const [help, setHelp] = useState<{
-    title: string;
-    body: string;
-    model: string;
-  } | null>(null);
-  const [helpBusy, setHelpBusy] = useState(false);
-  const [helpError, setHelpError] = useState<string | null>(null);
-  const [freeQuestion, setFreeQuestion] = useState("");
 
   const [health, setHealth] = useState<{
     configured: boolean;
     model: string | null;
   } | null>(null);
 
+  const endRef = useRef<HTMLDivElement | null>(null);
   const tick = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, busy]);
 
   useEffect(() => {
     return () => {
@@ -214,9 +223,7 @@ function AgentBody({
         if (alive)
           setHealth({ configured: !!d.configured, model: d.model ?? null });
       })
-      .catch(() => {
-        if (alive) setHealth({ configured: false, model: null });
-      });
+      .catch(() => alive && setHealth({ configured: false, model: null }));
     return () => {
       alive = false;
     };
@@ -228,21 +235,12 @@ function AgentBody({
     return m;
   }, [findings]);
 
-  const interviewLog = useMemo(
-    () =>
-      eventsFor(candidate.id).map(
-        (e) =>
-          `${e.requirementId}: ${e.outcome === "verified" ? "verified from interview answer" : "answer insufficient"} — ${e.reason}`,
-      ),
-    [eventsFor, candidate.id],
-  );
-
-  const shownQuestion =
-    question ??
-    focusQuestion?.question ??
-    (focusReq
-      ? `Walk me through your hands-on experience with ${focusReq.text.toLowerCase()} — a specific system, what you personally did, and how it ran in production.`
-      : "");
+  function push(...m: Message[]) {
+    setMessages((prev) => [...prev, ...m]);
+  }
+  function replacePending(pendingId: string, msg: Message) {
+    setMessages((prev) => prev.map((m) => (m.id === pendingId ? msg : m)));
+  }
 
   function startTimer() {
     setElapsed(0);
@@ -257,102 +255,149 @@ function AgentBody({
     tick.current = null;
   }
 
-  async function analyze() {
-    if (!focusReq || !focusFinding || !answer.trim()) return;
-    setPhase("analyzing");
-    setResult(null);
-    setAnalyzeError(null);
+  /* ── send handlers ── */
+
+  async function sendAnswer(text: string) {
+    if (!focusReq || !focusFinding || !text.trim() || busy) return;
+    const pendingId = newEventId("p");
+    push(
+      { id: newEventId("u"), role: "user", text, tag: `Answer · ${focusReq.id}` },
+      { id: pendingId, role: "ai", kind: "pending", label: `Checking against ${focusReq.id}` },
+    );
+    setBusy(true);
     startTimer();
     try {
-      const evaluation = await analyzeInterviewAnswer({
+      const ev = await analyzeInterviewAnswer({
         candidateId: candidate.id,
         requirementId: focusReqId,
-        question: shownQuestion,
-        answer,
+        question: questionByReq.get(focusReqId)?.question,
+        answer: text,
       });
       record({
         id: newEventId(`VE-${candidate.id}-${focusReqId}`),
         candidateId: candidate.id,
         requirementId: focusReqId,
-        priorStatus: evaluation.priorStatus,
-        newStatus: evaluation.newStatus,
-        outcome: evaluation.outcome,
-        reason: evaluation.reason,
-        evidenceQuote: evaluation.evidenceQuote ?? undefined,
-        evidenceSource: evaluation.evidenceSource,
-        answer,
-        followUp: evaluation.followUp ?? undefined,
+        priorStatus: ev.priorStatus,
+        newStatus: ev.newStatus,
+        outcome: ev.outcome,
+        reason: ev.reason,
+        evidenceQuote: ev.evidenceQuote ?? undefined,
+        evidenceSource: ev.evidenceSource,
+        answer: text,
+        followUp: ev.followUp ?? undefined,
         at: nowIso(),
         verifiedBy: "HireFlow AI",
       });
-      setResult(evaluation);
-      setPhase("result");
+      replacePending(pendingId, {
+        id: pendingId,
+        role: "ai",
+        kind: "verdict",
+        reqId: focusReqId,
+        priorStatus: ev.priorStatus,
+        newStatus: ev.newStatus,
+        outcome: ev.outcome,
+        reason: ev.reason,
+        evidenceQuote: ev.evidenceQuote,
+        evidenceSource: ev.evidenceSource,
+        followUp: ev.followUp,
+        model: ev.model,
+        elapsedMs: ev.elapsedMs,
+      });
     } catch (e) {
-      setAnalyzeError(e instanceof Error ? e.message : String(e));
-      setPhase("idle");
+      replacePending(pendingId, {
+        id: pendingId,
+        role: "ai",
+        kind: "error",
+        body: e instanceof Error ? e.message : String(e),
+      });
     } finally {
+      setBusy(false);
       stopTimer();
     }
   }
 
-  async function regenerateQuestion() {
-    if (!focusReq) return;
-    setQuestionBusy(true);
-    setHelpError(null);
-    try {
-      const q = await generateQuestion({
-        candidateId: candidate.id,
-        requirementId: focusReqId,
-        alreadyAsked: [
-          ...questions.map((x) => x.question),
-          ...(question ? [question] : []),
-        ],
-      });
-      setQuestion(q.question);
-    } catch (e) {
-      setHelpError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setQuestionBusy(false);
-    }
-  }
-
-  async function runHelp(action: HelpAction, userQuestion?: string) {
-    setHelpBusy(true);
-    setHelp(null);
-    setHelpError(null);
+  async function sendAsk(text: string, tag?: string) {
+    if (!text.trim() || busy) return;
+    const pendingId = newEventId("p");
+    push(
+      { id: newEventId("u"), role: "user", text, tag },
+      { id: pendingId, role: "ai", kind: "pending", label: "Thinking" },
+    );
+    setBusy(true);
     try {
       const res = await askAgent({
         candidateId: candidate.id,
         requirementId: focusReqId || undefined,
-        intent: action,
-        question: userQuestion,
+        intent: "free",
+        question: text,
         liveStatuses,
-        interviewLog,
       });
-      setHelp({ title: res.title, body: res.body, model: res.model });
+      replacePending(pendingId, {
+        id: pendingId,
+        role: "ai",
+        kind: "text",
+        title: res.title,
+        body: res.body,
+        model: res.model,
+      });
     } catch (e) {
-      setHelpError(e instanceof Error ? e.message : String(e));
+      replacePending(pendingId, {
+        id: pendingId,
+        role: "ai",
+        kind: "error",
+        body: e instanceof Error ? e.message : String(e),
+      });
     } finally {
-      setHelpBusy(false);
+      setBusy(false);
     }
   }
 
-  const focusStatus = focusFinding?.status ?? "absent";
-  const verifiedLive = isVerifiedLive(candidate.id, focusReqId);
-  const history = historyFor(candidate.id, focusReqId);
+  async function suggestQuestion() {
+    if (!focusReq || busy) return;
+    const pendingId = newEventId("p");
+    push({ id: pendingId, role: "ai", kind: "pending", label: "Writing a question" });
+    setBusy(true);
+    try {
+      const q = await generateQuestion({
+        candidateId: candidate.id,
+        requirementId: focusReqId,
+      });
+      replacePending(pendingId, {
+        id: pendingId,
+        role: "ai",
+        kind: "text",
+        title: `Suggested question · ${focusReq.id}`,
+        body: q.question,
+      });
+    } catch (e) {
+      replacePending(pendingId, {
+        id: pendingId,
+        role: "ai",
+        kind: "error",
+        body: e instanceof Error ? e.message : String(e),
+      });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function onSubmit() {
+    const text = input.trim();
+    if (!text) return;
+    setInput("");
+    if (mode === "answer") sendAnswer(text);
+    else sendAsk(text);
+  }
+
+  const verified = isVerifiedLive(candidate.id, focusReqId);
+  const hasRecorded = !!recordedAnswers[focusReqId];
 
   const state: "checking" | "ready" | "unconfigured" | "error" =
-    analyzeError || helpError
-      ? "error"
-      : health === null
-        ? "checking"
-        : health.configured
-          ? "ready"
-          : "unconfigured";
+    health === null ? "checking" : health.configured ? "ready" : "unconfigured";
 
   return (
     <>
-      {/* Sticky header */}
+      {/* Header */}
       <div className="flex shrink-0 items-center gap-2.5 border-b border-border bg-gradient-to-br from-[var(--color-violet)]/10 to-transparent px-4 py-3">
         <HireFlowGlyph size={18} className="text-primary" />
         <div className="min-w-0">
@@ -372,331 +417,317 @@ function AgentBody({
         </button>
       </div>
 
-      {/* Scrollable body */}
-      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
-        {/* Focus selector */}
-        <div>
-          <Eyebrow>Focus requirement</Eyebrow>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
-            {requirements.map((r) => {
-              const st = findingByReq.get(r.id)?.status ?? "absent";
-              const active = r.id === focusReqId;
-              const done = st === "met";
-              return (
-                <button
-                  key={r.id}
-                  type="button"
-                  onClick={() => onFocus(r.id)}
-                  title={`${r.id} — ${r.text}`}
-                  className={cn(
-                    "inline-flex items-center gap-1 rounded-full border px-2 py-1 font-mono text-[10px] font-bold transition-colors",
-                    active
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : done
-                        ? "border-[var(--color-met-border)] bg-[var(--color-met-bg)] text-[var(--color-met)]"
-                        : "border-border text-muted-foreground hover:bg-accent",
-                  )}
-                >
-                  {done && <BadgeCheck className="size-3" aria-hidden />}
-                  {r.id}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {focusReq && (
-          <div className="rounded-2xl border border-border bg-muted/40 p-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <IdTag>{focusReq.id}</IdTag>
-              <StatusBadge status={focusStatus} />
-            </div>
-            <p className="mt-2 text-sm font-medium">{focusReq.text}</p>
-            {focusFinding && !verifiedLive && (
-              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-                <span className="font-semibold text-foreground/70">
-                  Why flagged:{" "}
-                </span>
-                {focusFinding.missingDetail ?? focusFinding.reason}
-              </p>
-            )}
-          </div>
-        )}
-
-        {focusReq && !verifiedLive && (
-          <div className="rounded-2xl bg-accent p-3">
-            <div className="flex items-center gap-1.5">
-              <Eyebrow tone="brand" className="flex items-center gap-1.5">
-                <ShieldQuestion className="size-3.5" aria-hidden />
-                Suggested question
-              </Eyebrow>
-              <button
-                type="button"
-                onClick={regenerateQuestion}
-                disabled={questionBusy}
-                title="Ask the agent for a different question"
-                className="ml-auto inline-flex items-center gap-1 rounded-full border border-primary/30 px-2 py-0.5 text-[10px] font-semibold text-primary transition-colors hover:bg-card disabled:opacity-50"
-              >
-                {questionBusy ? (
-                  <Loader2 className="size-3 animate-spin" aria-hidden />
-                ) : (
-                  <RefreshCw className="size-3" aria-hidden />
-                )}
-                New
-              </button>
-            </div>
-            <p className="mt-1.5 text-sm font-medium text-foreground">
-              {shownQuestion}
-            </p>
-          </div>
-        )}
-
-        {focusReq && (
-          <div>
-            <label
-              htmlFor="agent-answer"
-              className="text-[10px] font-bold tracking-[0.08em] text-muted-foreground uppercase"
-            >
-              <span className="inline-flex items-center gap-1.5">
-                <MessageSquareQuote className="size-3.5" aria-hidden />
-                Candidate answer
-              </span>
-            </label>
-            <textarea
-              id="agent-answer"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              rows={5}
-              placeholder="Record or paste the candidate's answer…"
-              className="mt-1 w-full resize-y rounded-xl border border-input bg-muted/40 p-3 text-sm text-foreground outline-none focus:border-ring"
-            />
-            {phase !== "analyzing" && (
-              <button
-                type="button"
-                onClick={analyze}
-                disabled={!answer.trim()}
-                className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full brand-gradient px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
-              >
-                <HireFlowGlyph size={14} />
-                Analyse answer
-              </button>
-            )}
-          </div>
-        )}
-
-        {phase === "analyzing" && (
-          <div className="flex items-center gap-2 rounded-2xl border border-border bg-muted/40 p-3 text-xs">
-            <Loader2 className="size-4 animate-spin text-primary" aria-hidden />
-            <span className="text-foreground">
-              Evaluating the answer against {focusReqId}…
-            </span>
-            <span className="ml-auto font-mono tabular-nums text-muted-foreground">
-              {elapsed.toFixed(1)}s
-            </span>
-          </div>
-        )}
-
-        {analyzeError && (
-          <div className="flex items-start gap-2 rounded-2xl border border-[var(--color-absent-border)] bg-[var(--color-absent-bg)] p-3 text-xs">
-            <TriangleAlert
-              className="mt-0.5 size-4 shrink-0 text-[var(--color-absent)]"
-              aria-hidden
-            />
-            <div>
-              <p className="font-semibold text-[var(--color-absent)]">
-                Analysis failed
-              </p>
-              <p className="mt-0.5 leading-relaxed text-foreground/80">
-                {analyzeError}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {phase === "result" && result && (
-          <div
-            className={cn(
-              "rounded-2xl border p-3",
-              result.outcome === "verified"
-                ? "border-[var(--color-met-border)] bg-[var(--color-met-bg)]"
-                : "border-[var(--color-unverified-border)] bg-[var(--color-unverified-bg)]",
-            )}
-          >
-            <div className="flex flex-wrap items-center gap-2">
-              <Eyebrow>AI result</Eyebrow>
-              <span className="ml-auto flex items-center gap-1.5">
-                <StatusBadge status={result.priorStatus} />
-                <ArrowRight
-                  className="size-3.5 text-muted-foreground"
-                  aria-hidden
-                />
-                <StatusBadge status={result.newStatus} />
-              </span>
-            </div>
-
-            {result.outcome === "verified" && (
-              <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-[var(--color-met)]">
-                <BadgeCheck className="size-3.5" aria-hidden />
-                Verified by HireFlow AI
-              </p>
-            )}
-
-            <p className="mt-2 text-sm text-foreground/90">{result.reason}</p>
-
-            {result.evidenceQuote && (
-              <div className="mt-2.5">
-                <blockquote className="evidence-quote rounded-lg border-l-2 border-[var(--color-met)] bg-card/70 py-1.5 pr-3 pl-3 text-foreground/85">
-                  {result.evidenceQuote}
-                </blockquote>
-                <p className="mt-1 flex items-center gap-1 pl-3 text-[11px] text-[var(--color-met)]">
-                  <BadgeCheck className="size-3.5" aria-hidden />
-                  quote located in the {result.evidenceSource.toLowerCase()}
-                </p>
-              </div>
-            )}
-
-            {result.outcome === "insufficient" && result.followUp && (
-              <div className="mt-2.5 rounded-lg border-l-2 border-primary/40 bg-card/70 py-1.5 pr-3 pl-3">
-                <Eyebrow>Ask this follow-up</Eyebrow>
-                <p className="mt-1 text-sm text-foreground/90">
-                  {result.followUp}
-                </p>
-              </div>
-            )}
-
-            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
-              <span className="font-mono">{result.model}</span>
-              <span>{(result.elapsedMs / 1000).toFixed(1)}s</span>
-              {open.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const next = open.find(
-                      (f) => f.requirementId !== focusReqId,
-                    );
-                    if (next) onFocus(next.requirementId);
-                  }}
-                  className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-                >
-                  Next open requirement
-                  <ArrowRight className="size-3.5" aria-hidden />
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-
-        {history.length > 0 && (
-          <div>
-            <Eyebrow>Verification history · {focusReqId}</Eyebrow>
-            <ol className="mt-2 space-y-2 border-l border-border pl-3">
-              {history.map((e) => (
-                <li key={e.id} className="relative text-xs">
-                  <span
-                    className={cn(
-                      "absolute top-1 -left-[17px] size-2 rounded-full ring-2 ring-card",
-                      e.outcome === "verified"
-                        ? "bg-[var(--color-met)]"
-                        : "bg-[var(--color-unverified)]",
-                    )}
-                  />
-                  <span className="font-medium">
-                    {e.outcome === "verified"
-                      ? "Verified by HireFlow AI"
-                      : "Answer insufficient"}
-                  </span>
-                  <span className="ml-1.5 text-muted-foreground">
-                    {new Date(e.at).toLocaleTimeString("en-GB", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
-
-        {/* Ask */}
-        <div className="rounded-2xl border border-border p-3">
-          <Eyebrow>Ask about this candidate</Eyebrow>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const q = freeQuestion.trim();
-              if (q) {
-                runHelp("free", q);
-                setFreeQuestion("");
-              }
-            }}
-            className="mt-2 flex items-center gap-1.5"
-          >
-            <input
-              value={freeQuestion}
-              onChange={(e) => setFreeQuestion(e.target.value)}
-              placeholder="Ask anything…"
-              className="h-9 min-w-0 flex-1 rounded-lg border border-input bg-muted/40 px-2.5 text-xs outline-none focus:border-ring"
-              aria-label="Ask HireFlow AI about this candidate"
-            />
-            <button
-              type="submit"
-              disabled={!freeQuestion.trim() || helpBusy}
-              className="grid size-9 shrink-0 place-items-center rounded-lg brand-gradient text-white disabled:opacity-40"
-              aria-label="Send question"
-            >
-              <CornerDownLeft className="size-3.5" aria-hidden />
-            </button>
-          </form>
-
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {HELP_ITEMS.map((h) => (
-              <button
-                key={h.action}
-                type="button"
-                onClick={() => runHelp(h.action)}
-                disabled={helpBusy}
-                className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-foreground/75 transition-colors hover:border-primary/40 hover:bg-accent disabled:opacity-50"
-              >
-                {h.label}
-              </button>
-            ))}
-          </div>
-
-          {helpBusy && (
-            <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-              <Loader2 className="size-3.5 animate-spin" aria-hidden />
-              HireFlow AI is thinking…
-            </div>
-          )}
-
-          {helpError && (
-            <p className="mt-2 rounded-lg bg-[var(--color-absent-bg)] px-2.5 py-2 text-xs text-[var(--color-absent)]">
-              {helpError}
-            </p>
-          )}
-
-          {help && (
-            <div className="mt-2 rounded-xl bg-muted/60 p-2.5">
-              <p className="text-[11px] font-semibold text-primary">
-                {help.title}
-              </p>
-              <p className="mt-0.5 text-xs leading-relaxed text-foreground/85">
-                {help.body}
-              </p>
-              <p className="mt-1.5 font-mono text-[10px] text-muted-foreground">
-                {help.model}
-              </p>
-            </div>
-          )}
-        </div>
+      {/* Focus context — one compact control, not a panel */}
+      <div className="flex shrink-0 items-center gap-2 border-b border-border bg-muted/30 px-4 py-2">
+        <span className="text-[10px] font-bold tracking-[0.08em] text-muted-foreground uppercase">
+          Focus
+        </span>
+        <select
+          value={focusReqId}
+          onChange={(e) => onFocus(e.target.value)}
+          aria-label="Requirement in focus"
+          className="min-w-0 flex-1 truncate rounded-lg border border-border bg-card px-2 py-1 text-xs font-medium text-foreground/80"
+        >
+          {requirements.map((r) => {
+            const st = findingByReq.get(r.id)?.status ?? "absent";
+            return (
+              <option key={r.id} value={r.id}>
+                {r.id} — {r.text.length > 40 ? r.text.slice(0, 40) + "…" : r.text}{" "}
+                ({labelFor(st)})
+              </option>
+            );
+          })}
+        </select>
+        {focusFinding && <StatusBadge status={focusFinding.status} />}
       </div>
 
-      <div className="shrink-0 border-t border-border bg-muted/40 px-4 py-2 text-[10px] text-muted-foreground">
-        You run the conversation. HireFlow AI decides when the evidence verifies.
+      {/* THE single scroll region — the conversation */}
+      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+        {messages.map((m) => (
+          <MessageBubble key={m.id} m={m} elapsed={elapsed} />
+        ))}
+        <div ref={endRef} />
+      </div>
+
+      {/* Suggestions (wrap, no scroll) */}
+      <div className="flex shrink-0 flex-wrap gap-1.5 border-t border-border px-4 pt-2.5">
+        {mode === "answer" && hasRecorded && (
+          <Chip
+            onClick={() => setInput(recordedAnswers[focusReqId])}
+            disabled={busy}
+          >
+            <Sparkles className="size-3" aria-hidden />
+            Use recorded answer
+          </Chip>
+        )}
+        {focusReq && !verified && (
+          <Chip onClick={suggestQuestion} disabled={busy}>
+            <ShieldQuestion className="size-3" aria-hidden />
+            Suggest a question
+          </Chip>
+        )}
+        {focusReq && !verified && (
+          <Chip
+            onClick={() =>
+              sendAsk(`Why is ${focusReq.id} not verified yet?`, "Quick ask")
+            }
+            disabled={busy}
+          >
+            Why flagged?
+          </Chip>
+        )}
+        <Chip
+          onClick={() =>
+            sendAsk(`What should I ask ${candidate.name.split(" ")[0]} next?`, "Quick ask")
+          }
+          disabled={busy}
+        >
+          What next?
+        </Chip>
+        <Chip
+          onClick={() => sendAsk(`Summarise ${candidate.name} against this role.`, "Quick ask")}
+          disabled={busy}
+        >
+          Summarise
+        </Chip>
+      </div>
+
+      {/* Composer — one input, mode toggle */}
+      <div className="shrink-0 border-t border-border bg-card p-3">
+        <div className="mb-2 inline-flex rounded-full border border-border p-0.5 text-xs">
+          <button
+            type="button"
+            onClick={() => setMode("answer")}
+            className={cn(
+              "rounded-full px-3 py-1 font-semibold transition-colors",
+              mode === "answer"
+                ? "bg-[var(--color-violet)] text-white"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Candidate answer
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("ask")}
+            className={cn(
+              "rounded-full px-3 py-1 font-semibold transition-colors",
+              mode === "ask"
+                ? "bg-[var(--color-violet)] text-white"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Ask AI
+          </button>
+        </div>
+
+        <div className="flex items-end gap-2">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onSubmit();
+              }
+            }}
+            rows={mode === "answer" ? 3 : 1}
+            disabled={busy}
+            placeholder={
+              mode === "answer"
+                ? `Paste ${candidate.name.split(" ")[0]}'s answer to ${focusReqId}…`
+                : `Ask about ${candidate.name.split(" ")[0]}…`
+            }
+            aria-label={
+              mode === "answer"
+                ? "Candidate's interview answer"
+                : "Ask HireFlow AI about this candidate"
+            }
+            className="max-h-40 min-w-0 flex-1 resize-none rounded-xl border border-input bg-muted/40 p-2.5 text-sm outline-none focus:border-ring disabled:opacity-60"
+          />
+          <button
+            type="button"
+            onClick={onSubmit}
+            disabled={!input.trim() || busy}
+            aria-label={mode === "answer" ? "Analyse answer" : "Send question"}
+            className="grid size-10 shrink-0 place-items-center rounded-xl brand-gradient text-white disabled:opacity-40"
+          >
+            {busy ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden />
+            ) : (
+              <SendHorizontal className="size-4" aria-hidden />
+            )}
+          </button>
+        </div>
+        <p className="mt-1.5 text-[10px] text-muted-foreground">
+          {mode === "answer"
+            ? "HireFlow AI decides if the answer verifies the requirement — you make the hiring call."
+            : "Grounded in this candidate's evidence. Enter to send, Shift+Enter for a new line."}
+        </p>
       </div>
     </>
   );
+}
+
+/* ── bubbles ────────────────────────────────────────────────────────────── */
+
+function MessageBubble({ m, elapsed }: { m: Message; elapsed: number }) {
+  if (m.role === "user") {
+    return (
+      <div className="flex flex-col items-end">
+        {m.tag && (
+          <span className="mb-0.5 text-[10px] font-medium text-muted-foreground">
+            {m.tag}
+          </span>
+        )}
+        <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-[var(--color-violet)] px-3 py-2 text-sm text-white">
+          {m.text}
+        </div>
+      </div>
+    );
+  }
+
+  if (m.kind === "pending") {
+    return (
+      <AiRow>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Loader2 className="size-3.5 animate-spin text-primary" aria-hidden />
+          {m.label}…
+          <span className="font-mono tabular-nums">{elapsed.toFixed(1)}s</span>
+        </div>
+      </AiRow>
+    );
+  }
+
+  if (m.kind === "error") {
+    return (
+      <AiRow tone="error">
+        <div className="flex items-start gap-2">
+          <TriangleAlert
+            className="mt-0.5 size-4 shrink-0 text-[var(--color-absent)]"
+            aria-hidden
+          />
+          <div>
+            <p className="text-xs font-semibold text-[var(--color-absent)]">
+              The agent couldn&apos;t respond
+            </p>
+            <p className="mt-0.5 text-xs leading-relaxed text-foreground/80">
+              {m.body}
+            </p>
+          </div>
+        </div>
+      </AiRow>
+    );
+  }
+
+  if (m.kind === "text") {
+    return (
+      <AiRow>
+        {m.title && (
+          <p className="mb-1 text-xs font-semibold text-primary">{m.title}</p>
+        )}
+        <p className="text-sm leading-relaxed text-foreground/90">{m.body}</p>
+        {m.model && (
+          <p className="mt-1.5 font-mono text-[10px] text-muted-foreground">
+            {m.model}
+          </p>
+        )}
+      </AiRow>
+    );
+  }
+
+  // verdict
+  const good = m.outcome === "verified";
+  return (
+    <AiRow tone={good ? "met" : "warn"}>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <StatusBadge status={m.priorStatus} />
+        <ArrowRight className="size-3.5 text-muted-foreground" aria-hidden />
+        <StatusBadge status={m.newStatus} />
+        {good && (
+          <span className="ml-auto inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--color-met)]">
+            <BadgeCheck className="size-3.5" aria-hidden />
+            Verified by HireFlow AI
+          </span>
+        )}
+      </div>
+      <p className="mt-2 text-sm leading-relaxed text-foreground/90">
+        {m.reason}
+      </p>
+      {m.evidenceQuote && (
+        <div className="mt-2">
+          <blockquote className="evidence-quote rounded-lg border-l-2 border-[var(--color-met)] bg-card/80 py-1.5 pr-3 pl-3 text-foreground/85">
+            {m.evidenceQuote}
+          </blockquote>
+          <p className="mt-1 flex items-center gap-1 pl-3 text-[11px] text-[var(--color-met)]">
+            <BadgeCheck className="size-3.5" aria-hidden />
+            quote located in the {m.evidenceSource.toLowerCase()}
+          </p>
+        </div>
+      )}
+      {!good && m.followUp && (
+        <div className="mt-2 rounded-lg border-l-2 border-primary/40 bg-card/80 py-1.5 pr-3 pl-3">
+          <p className="text-[10px] font-bold tracking-[0.08em] text-muted-foreground uppercase">
+            Ask this follow-up
+          </p>
+          <p className="mt-1 text-sm text-foreground/90">{m.followUp}</p>
+        </div>
+      )}
+      <p className="mt-2 font-mono text-[10px] text-muted-foreground">
+        {m.model} · {(m.elapsedMs / 1000).toFixed(1)}s
+      </p>
+    </AiRow>
+  );
+}
+
+function AiRow({
+  children,
+  tone = "default",
+}: {
+  children: React.ReactNode;
+  tone?: "default" | "met" | "warn" | "error";
+}) {
+  const toneCls = {
+    default: "border-border bg-muted/50",
+    met: "border-[var(--color-met-border)] bg-[var(--color-met-bg)]",
+    warn: "border-[var(--color-unverified-border)] bg-[var(--color-unverified-bg)]",
+    error: "border-[var(--color-absent-border)] bg-[var(--color-absent-bg)]",
+  }[tone];
+  return (
+    <div className="flex items-start gap-2">
+      <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full brand-gradient text-white">
+        <HireFlowGlyph size={12} />
+      </span>
+      <div className={cn("max-w-[88%] rounded-2xl rounded-tl-sm border p-3", toneCls)}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Chip({
+  children,
+  onClick,
+  disabled,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-foreground/75 transition-colors hover:border-primary/40 hover:bg-accent disabled:opacity-50"
+    >
+      {children}
+    </button>
+  );
+}
+
+function labelFor(s: FindingStatus): string {
+  return { met: "Met", partial: "Partial", unverified: "Unverified", absent: "No evidence" }[s];
 }
 
 function AgentStatusBadge({
@@ -707,32 +738,15 @@ function AgentStatusBadge({
   model: string | null;
 }) {
   const meta = {
-    checking: {
-      dot: "bg-muted-foreground/50",
-      cls: "bg-muted text-muted-foreground",
-      label: "checking…",
-    },
-    ready: {
-      dot: "bg-[var(--color-met)]",
-      cls: "bg-[var(--color-met-bg)] text-[var(--color-met)]",
-      label: model ?? "connected",
-    },
-    unconfigured: {
-      dot: "bg-[var(--color-unverified)]",
-      cls: "bg-[var(--color-unverified-bg)] text-[var(--color-unverified)]",
-      label: "no model",
-    },
-    error: {
-      dot: "bg-[var(--color-absent)]",
-      cls: "bg-[var(--color-absent-bg)] text-[var(--color-absent)]",
-      label: "model error",
-    },
+    checking: { dot: "bg-muted-foreground/50", cls: "bg-muted text-muted-foreground", label: "checking…" },
+    ready: { dot: "bg-[var(--color-met)]", cls: "bg-[var(--color-met-bg)] text-[var(--color-met)]", label: model ?? "connected" },
+    unconfigured: { dot: "bg-[var(--color-unverified)]", cls: "bg-[var(--color-unverified-bg)] text-[var(--color-unverified)]", label: "no model" },
+    error: { dot: "bg-[var(--color-absent)]", cls: "bg-[var(--color-absent-bg)] text-[var(--color-absent)]", label: "model error" },
   }[state];
-
   return (
     <span
       className={cn(
-        "ml-auto inline-flex max-w-[44%] items-center gap-1 truncate rounded-full px-2 py-0.5 text-[10px] font-semibold",
+        "ml-auto inline-flex max-w-[42%] items-center gap-1 truncate rounded-full px-2 py-0.5 text-[10px] font-semibold",
         meta.cls,
       )}
       title={model ? `Agent model: ${model}` : undefined}
