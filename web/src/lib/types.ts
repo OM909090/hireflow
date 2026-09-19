@@ -210,3 +210,49 @@ export function needsValidation(findings: Finding[]): Finding[] {
     .filter((f) => f.status === "unverified" || f.status === "absent")
     .sort((a, b) => rank[a.status] - rank[b.status]);
 }
+
+/**
+ * Candidate grouping (capability 5 — "group candidates based on relevant
+ * experience and role requirements").
+ *
+ * The band is derived ONLY from how many *must-have* requirements have located,
+ * verified evidence — the same number printed on every candidate card. It is a
+ * description of the evidence state, not a hiring verdict: the recruiter still
+ * makes every call. We deliberately avoid an opaque composite score.
+ */
+export type CandidateBand = "strong" | "validate" | "limited";
+
+export interface BandMeta {
+  id: CandidateBand;
+  label: string;
+  caption: string;
+}
+
+/** Rendered top-to-bottom on the candidate pool. */
+export const BANDS: BandMeta[] = [
+  {
+    id: "strong",
+    label: "Strong must-have coverage",
+    caption:
+      "Most or all must-have requirements have located evidence. Still your call.",
+  },
+  {
+    id: "validate",
+    label: "Needs validation",
+    caption:
+      "Some must-haves are evidenced; key requirements remain unproven — questions are ready.",
+  },
+  {
+    id: "limited",
+    label: "Limited role evidence",
+    caption:
+      "Few of this role's must-have requirements are evidenced in the resume.",
+  },
+];
+
+export function candidateBand(summary: CoverageSummary): CandidateBand {
+  const { hardEvidenced: e, hardTotal: t } = summary;
+  if (t > 0 && e >= Math.max(1, t - 1)) return "strong";
+  if (e * 3 <= t) return "limited";
+  return "validate";
+}

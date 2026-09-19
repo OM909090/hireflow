@@ -11,6 +11,7 @@ import {
   Briefcase,
   CheckCircle2,
   FileText,
+  Info,
   MapPin,
   Play,
   RotateCcw,
@@ -120,6 +121,24 @@ export default function IntakePage() {
 
       {phase === "idle" && (
         <>
+          <div className="mb-4 flex items-start gap-2.5 rounded-2xl border border-border bg-card/70 p-3.5 text-xs leading-relaxed text-muted-foreground">
+            <Info className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+            <p>
+              <span className="font-semibold text-foreground/80">
+                How this demo runs.
+              </span>{" "}
+              The pool is synthetic, and the screening is a faithful replay of
+              real, verifier-checked model output recorded ahead of time. A live
+              model call takes ~30s, so the deployed app streams the recorded run
+              rather than calling the model in the browser — the evidence,
+              quotes, and refusals you see are all genuine. To regenerate:{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">
+                cd api &amp;&amp; uv run python -m hireflow.run
+              </code>
+              .
+            </p>
+          </div>
+
           <div className="grid items-start gap-4 lg:grid-cols-3">
             {/* ── Job description ── */}
             <Panel className="lg:col-span-2">

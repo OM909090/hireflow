@@ -23,8 +23,20 @@ import {
   requirementById,
   requirements,
 } from "@/lib/data";
-import { needsValidation, summariseCoverage } from "@/lib/types";
-import type { CoverageSummary } from "@/lib/types";
+import {
+  BANDS,
+  candidateBand,
+  needsValidation,
+  summariseCoverage,
+} from "@/lib/types";
+import type { CandidateBand, CoverageSummary } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+const BAND_DOT: Record<CandidateBand, string> = {
+  strong: "bg-[var(--color-met)]",
+  validate: "bg-[var(--color-unverified)]",
+  limited: "bg-muted-foreground/50",
+};
 
 export default function CandidatesPage() {
   const rows = candidates
@@ -77,7 +89,7 @@ export default function CandidatesPage() {
       <PageHeader
         eyebrow="Step 3 — Candidates"
         title="Candidate pool"
-        subtitle={`${candidates.length} candidates screened against ${requirements.length} requirements. Ordered by how many must-have requirements have located evidence — the same figure printed on each card.`}
+        subtitle={`${candidates.length} candidates screened against ${requirements.length} requirements, grouped by how many must-have requirements have located evidence — the same figure printed on each card. HireFlow organises; you decide.`}
       />
 
       {/* ── Pool summary ── */}
@@ -129,21 +141,46 @@ export default function CandidatesPage() {
         </Panel>
       </div>
 
-      {/* ── Candidate cards ── */}
-      <div className="space-y-4">
-        {rows.map(({ candidate: c, findings: f, summary, open }) => {
-          const met = f.filter((x) => x.status === "met");
+      {/* ── Candidate cards, grouped into bands (capability 5) ── */}
+      {BANDS.map((band) => {
+        const bandRows = rows.filter(
+          (r) => candidateBand(r.summary) === band.id,
+        );
+        if (bandRows.length === 0) return null;
 
-          return (
-            <Panel key={c.id} className="overflow-hidden">
+        return (
+          <section key={band.id} className="mt-7 first:mt-0">
+            <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span
+                className={cn(
+                  "size-2.5 self-center rounded-full",
+                  BAND_DOT[band.id],
+                )}
+                aria-hidden
+              />
+              <h2 className="text-base font-semibold tracking-tight">
+                {band.label}
+              </h2>
+              <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-bold tabular-nums text-secondary-foreground">
+                {bandRows.length}
+              </span>
+              <p className="text-xs text-muted-foreground">{band.caption}</p>
+            </div>
+
+            <div className="space-y-4">
+              {bandRows.map(({ candidate: c, findings: f, summary, open }) => {
+                const met = f.filter((x) => x.status === "met");
+
+                return (
+                  <Panel key={c.id} className="overflow-hidden">
               <div className="flex flex-wrap items-start gap-4 p-5">
                 <Avatar name={c.name} size="lg" />
 
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-lg font-semibold tracking-tight">
+                    <h3 className="text-lg font-semibold tracking-tight">
                       {c.name}
-                    </h2>
+                    </h3>
                     <IdTag>{c.id}</IdTag>
                     {open.length > 0 && (
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-unverified-bg)] px-2.5 py-1 text-xs font-bold text-[var(--color-unverified)]">
@@ -242,10 +279,13 @@ export default function CandidatesPage() {
                   {c.aiSummary}
                 </p>
               </div>
-            </Panel>
-          );
-        })}
-      </div>
+                  </Panel>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
     </>
   );
 }
