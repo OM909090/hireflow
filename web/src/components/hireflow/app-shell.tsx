@@ -11,7 +11,6 @@ import {
   LayoutGrid,
   Link2,
   ListChecks,
-  Search,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -29,7 +28,6 @@ const RAIL = [
   { href: "/requirements", label: "Requirements", icon: ListChecks },
   { href: "/candidates", label: "Candidates", icon: Users },
   { href: "/matrix", label: "Evidence matrix", icon: Grid3x3 },
-  { href: "/ask", label: "Ask the pool", icon: Search },
   { href: "/activity", label: "Agent activity", icon: Activity },
 ];
 

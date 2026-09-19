@@ -179,6 +179,16 @@ export function MatrixView() {
                   })}
                 </tr>
               ))}
+              {rows.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={candidates.length + 1}
+                    className="p-8 text-center text-sm text-muted-foreground"
+                  >
+                    No requirements match this filter.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
