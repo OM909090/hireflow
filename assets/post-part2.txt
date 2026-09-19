@@ -1,0 +1,27 @@
+I picked the candidate screening problem statement, and spent today on research instead of code. Three things reframed the whole build for me.
+
+1. This isn't a normal AI product category.
+
+Under the EU AI Act, AI used to filter job applications and evaluate candidates is classified high-risk. NYC already requires an independent bias audit and 10 business days' notice to candidates before an automated tool assesses them. So "it works" isn't the bar. "You can explain why it decided that" is the bar.
+
+2. Amazon already ran this experiment.
+
+They built a resume screener, trained it on who they had hired before, and it learned to penalise resumes containing the word "women's". They scrapped it. The lesson I keep coming back to: a shortlist you can't explain is a shortlist you can't defend.
+
+3. So the interesting problem isn't scoring. It's evidence.
+
+Ranking resumes is a solved commodity. What isn't solved: every claim the agent makes should point back to the exact line it came from. And when it can't find something, it should say "unverified" instead of guessing.
+
+That changes the architecture:
+
+- Extraction returns only what is literally in the document, with a source pointer
+- Anything missing gets flagged for a human instead of filled in by the model
+- Scoring happens in deterministic code over cited evidence, not inside a prompt
+
+Not building a tool that decides who to hire. Building one that shows its work.
+
+Tomorrow: the prototype, and finding out which parts of that plan survive contact with reality.
+
+Recruiters and hiring managers, what is the one thing you would want to see next to a candidate score to actually trust it?
+
+#AIHackathon #BuildWithAI #ProductSpace

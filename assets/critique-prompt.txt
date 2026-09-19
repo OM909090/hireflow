@@ -1,0 +1,86 @@
+I'm in a 2-day hackathon with ~16 hours of real build time left, solo. I need you to critique my build plan hard. Be specific and adversarial — I want the flaws, not encouragement. Where you disagree, say what you'd do instead and why.
+
+=== CONTEXT ===
+
+Event: "Agentic AI Hackathon" by Product Space. Deadline 20 Sep 2026 23:59 IST. Solo participant. Deliverable is a MANDATORY 3-minute demo video of a WORKING prototype (not slides), plus optional deck / live link / n8n JSON. Submission is one-shot, no edits. Pre-built projects disallowed; starter templates OK. Must declare my contribution vs AI-generated output.
+
+Judging rubric (exact weights):
+- AI Integration 25%
+- LinkedIn content + engagement 25%
+- Prototype quality & UX 20%
+- Problem understanding 15%
+- Innovation & creativity 15%
+
+=== PROBLEM STATEMENT (verbatim from organizers) ===
+
+"HireFlow: AI Candidate Screening & Interview Intelligence Agent"
+
+Problem: Recruiters review large numbers of resumes for every open role. Important candidate information is often buried across resumes, portfolios, application forms, and interview notes. Manual screening is time-consuming and can make it difficult for hiring teams to consistently compare candidates against the actual requirements of a role. Interviewers also spend time preparing questions and reviewing notes instead of focusing on candidate conversations.
+
+The Build: "Build an AI-powered recruitment intelligence agent that helps hiring teams organize and evaluate candidate information." Required capabilities:
+1. Allow recruiters to upload a job description and candidate resumes
+2. Extract relevant skills, experience, projects, and qualifications from each candidate profile
+3. Map candidate experience against specific job requirements
+4. Identify missing or unclear information that requires validation
+5. Group candidates based on relevant experience and role requirements
+6. Generate structured candidate summaries for recruiters
+7. Create role-specific interview questions based on each candidate's background
+8. Generate follow-up questions when an answer requires deeper validation
+9. Summarize interview notes and map evidence back to the job requirements
+10. Identify unanswered evaluation areas after an interview
+11. Generate a standardized interview evaluation report
+12. Allow recruiters to query the candidate pool using natural language
+13. Maintain an audit trail showing which candidate information was used to generate each insight
+
+Stated goal: "reduce repetitive recruitment work while keeping human hiring decisions at the center of the process."
+
+=== MY STRATEGIC THESIS ===
+
+AI used to filter job applications is classified HIGH-RISK under the EU AI Act (Annex III 4(a)). NYC Local Law 144 already mandates independent bias audits, published results, and 10 business days' candidate notice. Amazon's scrapped screener (penalised resumes containing "women's", downgraded all-women's-college grads) is the canonical failure.
+
+So my bet: capability 13 (audit trail) is the one requirement that maps onto real law, and it's the one most of ~3000 participants will skip because it isn't flashy. Ranking resumes is a commodity; PROVING why is not. Positioning: "Most AI screening tools tell you who to interview. HireFlow tells you why, shows the evidence, and flags what it doesn't know."
+
+=== MY PLAN ===
+
+Two structural claims:
+(a) The keystone isn't on the organizers' list: "parse the JD into discrete addressable Requirement objects with stable IDs" — caps 3,4,5,6,7,10,11 are meaningless without it.
+(b) Cap 13 is NOT a block, it's a data-model constraint. If extraction doesn't capture a source pointer at read time, provenance is gone forever. Same for cap 4 — "missing info" only exists relative to a requirement, so it's free if the schema allows an explicit `absent` state.
+
+Blocks (est. hours):
+- B0 Schema/data model (caps 4,13) — 1.0h. Requirement{id,text,type,jd_span}; EvidenceSpan{doc,quote}; Finding{requirement_id, candidate_id, status ∈ met|partial|unverified|absent, evidence[]}
+- B1 Ingest JD + resumes (cap 1) — 2.0h
+- B2 JD → Requirements (keystone) — 1.5h
+- B3 Resume extraction w/ citations (caps 2,13) — 3.0h  ← hardest
+- B4 Mapping → Findings (caps 3,4) — 2.5h
+- B5 Candidate summary + click-to-reveal evidence (caps 6,13) — 3.0h ← the demo
+- B6 Interview questions targeting gaps (cap 7) — 1.5h
+= 14.5h spine, ~1.5h slack against 16h
+
+NICE if ahead: B7 grouping (cap 5) 1h · B8 NL query (cap 12) 2h · B11' blank standardized eval report generated from findings+questions, scoring side unbuilt (partial cap 11) 1h
+CUT: full interview loop (caps 8,9,10,11) — needs interview notes as a second input type, 6h+
+
+Key technical decisions:
+1. Evidence granularity: quoted snippet, NOT character offsets + highlighting. Then a SUBSTRING CHECK in code — verify the returned quote actually appears in the source doc; if not, reject the claim as unverified. ~10 lines, converts "model says it found this" into "we verified it."
+2. Architecture: most of this is a deterministic PIPELINE, not an agent swarm. B2/B3/B4 are stages with LLM calls inside. Genuinely agentic: B8 (real tool use) and the "is this evidence sufficient" judgment in B4. Framing: "agentic where judgment is needed, deterministic where it must be auditable." Undecided between LangGraph (checkpointed state IS an audit trail, graph renders as demo asset) vs plain Python + provider-native structured outputs.
+3. Streamlit UI (expanders = click-to-reveal evidence). SQLite so the audit trail survives reload.
+4. Fixtures: 1 JD + 5 synthetic resumes, made at hour 1 not hour 14. One deliberate near-miss (strong candidate missing one hard requirement) to make the `unverified` flag visible on camera.
+
+Demo-backward — 5 shots, anything not serving a shot is decoration:
+1. Upload JD + 5 resumes
+2. JD decomposes into numbered requirements
+3. Candidate summary, every claim with [show evidence]
+4. MONEY SHOT: a requirement marked UNVERIFIED beside one marked MET with its cited line — the agent visibly declining to guess
+5. Interview questions targeting the unverified gaps
+Record each shot as soon as it works. Hard freeze on feature work at 18:00 Day 2; remaining time is video + Drive + submission + buffer.
+
+=== WHAT I WANT FROM YOU ===
+
+1. Attack the thesis. Is "auditability as the differentiator" actually the right bet for THIS rubric, or am I over-indexing on regulation a student judge may not care about? What would you bet on instead?
+2. Is the cut right? Anything in my MUST list that's dead weight, or anything CUT/NICE that's secretly cheap and high-scoring? Be specific about cap 5, 8, 12.
+3. Attack the 14.5h estimate. Which block will actually blow up, and what's the pre-emptive simplification?
+4. The substring check — any failure mode I'm missing (paraphrasing, PDF ligatures, whitespace/hyphenation, multi-line quotes)? How would you harden it cheaply?
+5. LangGraph vs plain Python given 16h solo and a 25% "AI Integration" weight. Pick one and defend it.
+6. What's the single highest-ROI thing missing from this plan entirely?
+7. Anything in shot 4 that won't land on camera the way I think it will?
+
+Give me concrete changes I can act on in the next hour, ranked by impact.

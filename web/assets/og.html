@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1200px; height:630px; overflow:hidden; font-family:'Inter',sans-serif; }
+  .card {
+    width:1200px; height:630px; position:relative; overflow:hidden;
+    background:
+      radial-gradient(900px 500px at 88% -10%, rgba(236,72,153,.14), transparent 60%),
+      radial-gradient(800px 460px at -8% 110%, rgba(59,42,107,.14), transparent 60%),
+      #ffffff;
+    padding:64px 68px; display:flex; flex-direction:column;
+  }
+  .grid { position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(20,22,31,.03) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(20,22,31,.03) 1px,transparent 1px);
+    background-size:48px 48px; }
+  .top { position:relative; display:flex; align-items:center; gap:16px; }
+  .logo { width:56px; height:56px; border-radius:16px;
+    background:linear-gradient(100deg,#ec4899,#f472b6); display:grid; place-items:center;
+    color:#fff; font-size:30px; font-weight:800; box-shadow:0 8px 20px -6px rgba(236,72,153,.5); }
+  .brand { font-size:30px; font-weight:800; letter-spacing:-.01em; color:#14161f; }
+  .brand span { color:#ec4899; }
+  h1 { position:relative; margin-top:44px; font-size:66px; line-height:1.05;
+    font-weight:800; letter-spacing:-.03em; color:#14161f; max-width:1000px; }
+  h1 em { font-style:normal; color:#ec4899; }
+  .sub { position:relative; margin-top:22px; font-size:26px; line-height:1.4;
+    color:#6b7183; max-width:940px; font-weight:400; }
+  .row { position:relative; margin-top:auto; display:flex; gap:16px; }
+  .pill { display:flex; align-items:center; gap:12px; border-radius:16px; padding:16px 22px;
+    font-family:'JetBrains Mono',monospace; font-size:19px; }
+  .met { background:#e7f8f0; border:1.5px solid #a7e8cb; color:#047857; }
+  .unv { background:#fff6e3; border:1.5px solid #fbd88a; color:#a1590a; }
+  .dot { width:12px; height:12px; border-radius:99px; }
+  .met .dot { background:#10b981; } .unv .dot { background:#f59e0b; }
+  .tag { margin-left:auto; font-size:18px; color:#9aa0b0; font-weight:500; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="grid"></div>
+  <div class="top">
+    <div class="logo">✦</div>
+    <div class="brand">Hire<span>Flow</span></div>
+    <div class="tag">Agentic AI Hackathon · Product Space</div>
+  </div>
+
+  <h1>Ranking resumes is solved.<br><em>Proving why</em> is not.</h1>
+  <div class="sub">
+    An AI screening agent that cites the evidence behind every claim — and
+    flags what it can't verify instead of guessing.
+  </div>
+
+  <div class="row">
+    <div class="pill met"><span class="dot"></span>REQ-02 · met · quote located in source</div>
+    <div class="pill unv"><span class="dot"></span>REQ-03 · unverified · human must validate</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HireFlow — Day 1 Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body { width:1200px; height:1200px; overflow:hidden; }
+
+  body {
+    background:#0d1117;
+    font-family:'Inter',system-ui,sans-serif;
+  }
+
+  .card {
+    width:1200px;
+    height:1200px;
+    background:
+      radial-gradient(1000px 600px at 85% -10%, rgba(56,139,253,.12), transparent 60%),
+      radial-gradient(800px 500px at 10% 110%, rgba(63,185,80,.09), transparent 60%),
+      #0d1117;
+    padding:48px 56px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .grid-bg {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(240,246,252,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,246,252,.028) 1px, transparent 1px);
+    background-size:48px 48px;
+    pointer-events:none;
+  }
+
+  header { position:relative; z-index:2; flex:none; }
+
+  .eyebrow {
+    font-size:15px; font-weight:600; letter-spacing:.16em;
+    text-transform:uppercase; color:#58a6ff; margin-bottom:11px;
+  }
+
+  h1 {
+    font-size:50px; font-weight:800; color:#f0f6fc;
+    letter-spacing:-.025em; line-height:1.05;
+  }
+
+  h1 em { font-style:normal; color:#58a6ff; }
+
+  .sub {
+    font-size:20px; color:#8b949e; margin-top:13px;
+    font-weight:400; line-height:1.45; max-width:900px;
+  }
+
+  .flow {
+    flex:1; display:flex; flex-direction:column;
+    justify-content:center; gap:11px;
+    position:relative; z-index:2; margin:14px 0;
+  }
+
+  .box {
+    border:1.5px solid #30363d; border-radius:14px;
+    background:rgba(22,27,34,.85); padding:16px 24px;
+  }
+
+  .box .label {
+    font-size:13px; font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; color:#6e7681; margin-bottom:6px;
+  }
+
+  .box .body { font-size:22px; font-weight:600; color:#e6edf3; line-height:1.28; }
+  .box .note {
+    font-family:'JetBrains Mono',monospace;
+    font-size:15px; color:#8b949e; margin-top:6px;
+  }
+
+  .arrow {
+    text-align:center; color:#484f58;
+    font-size:21px; line-height:1; height:13px;
+  }
+
+  .split { display:flex; gap:18px; }
+  .split > div { flex:1; }
+
+  .good {
+    border-color:rgba(63,185,80,.45);
+    background:linear-gradient(180deg, rgba(63,185,80,.11), rgba(22,27,34,.85));
+  }
+  .good .label { color:#3fb950; }
+
+  .warn {
+    border-color:rgba(210,153,34,.5);
+    background:linear-gradient(180deg, rgba(210,153,34,.11), rgba(22,27,34,.85));
+  }
+  .warn .label { color:#d29922; }
+
+  .quote {
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px; color:#7d8590;
+    background:rgba(13,17,23,.75);
+    border-left:3px solid #30363d;
+    padding:8px 12px; border-radius:6px;
+    margin-top:9px; line-height:1.5;
+  }
+  .good .quote { border-left-color:#3fb950; color:#7ee787; }
+  .warn .quote { border-left-color:#d29922; color:#e3b341; }
+
+  .final {
+    border-color:rgba(88,166,255,.5);
+    background:linear-gradient(180deg, rgba(88,166,255,.12), rgba(22,27,34,.85));
+  }
+  .final .label { color:#58a6ff; }
+
+  footer {
+    position:relative; z-index:2; flex:none;
+    border-top:1.5px solid #21262d; padding-top:18px;
+    display:flex; justify-content:space-between; align-items:flex-end; gap:28px;
+  }
+
+  .punch {
+    font-size:25px; font-weight:700; color:#f0f6fc;
+    line-height:1.32; letter-spacing:-.01em;
+  }
+  .punch span { color:#3fb950; }
+
+  .meta {
+    text-align:right; font-size:15px; color:#6e7681;
+    line-height:1.65; white-space:nowrap; font-weight:500;
+  }
+  .meta strong { color:#8b949e; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="grid-bg"></div>
+
+  <header>
+    <div class="eyebrow">Agentic AI Hackathon · Day 1 · Problem Exploration</div>
+    <h1>Ranking resumes is solved.<br><em>Proving why</em> is not.</h1>
+    <div class="sub">
+      AI that filters job applications is high-risk under the EU AI Act. So the architecture
+      has to make every conclusion traceable — by construction, not by logging.
+    </div>
+  </header>
+
+  <div class="flow">
+    <div class="box">
+      <div class="label">Input</div>
+      <div class="body">Job description + candidate resumes</div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="box">
+      <div class="label">Extraction · visible-only</div>
+      <div class="body">Pull only what is literally in the document</div>
+      <div class="note">no inference at this layer — every span carries a source pointer</div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="split">
+      <div class="box good">
+        <div class="label">✓ Found → cited</div>
+        <div class="body">Claim keeps its evidence</div>
+        <div class="quote">requirement: 5+ yrs Python<br>evidence: resume p.1 L4<br>"Senior Python Eng, 2019–2026"</div>
+      </div>
+      <div class="box warn">
+        <div class="label">⚠ Not found → flagged</div>
+        <div class="body">Never guessed, never filled in</div>
+        <div class="quote">requirement: Kubernetes<br>status: UNVERIFIED<br>action: human must validate</div>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="box">
+      <div class="label">Requirement mapping</div>
+      <div class="body">Deterministic code over cited evidence</div>
+      <div class="note">scoring lives outside the prompt — reproducible and testable</div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="box final">
+      <div class="label">Output</div>
+      <div class="body">Candidate summary + interview questions + audit trail</div>
+      <div class="note">a human decides — the agent shows its work</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="punch">A field is either <span>cited</span> or <span>flagged</span>.<br>There is no third option.</div>
+    <div class="meta">
+      <strong>HireFlow</strong><br>
+      Candidate Screening &amp; Interview Intelligence<br>
+      Hackathon by Product Space
+    </div>
+  </footer>
+</div>
+</body>
+</html>

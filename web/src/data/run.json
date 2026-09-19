@@ -1,0 +1,1072 @@
+{
+  "job": {
+    "id": "JOB-001",
+    "title": "Senior Backend Engineer",
+    "company": "Northwind Logistics",
+    "location": "Bengaluru, India \u00b7 Hybrid",
+    "sourceDoc": "northwind-senior-backend-engineer.md",
+    "rawText": "# Senior Backend Engineer\n\n**Northwind Logistics** \u2014 Bengaluru, India \u00b7 Hybrid\n\nWe are hiring a Senior Backend Engineer to own services behind our freight\nallocation platform. You will design APIs, model data, and operate what you ship.\n\n## Requirements\n\n- At least 5 years of professional backend engineering experience in Python\n- Production experience with Django or FastAPI\n- Experience deploying and operating workloads on Kubernetes in production\n- Strong PostgreSQL skills including schema design and query optimisation\n\n## Nice to have\n\n- Event-driven architecture experience (Kafka, RabbitMQ or SQS)\n- Experience leading or mentoring engineers\n- Bachelor's degree in Computer Science or equivalent practical experience\n"
+  },
+  "requirements": [
+    {
+      "id": "REQ-01",
+      "text": "Have at least 5 years of professional backend engineering experience in Python",
+      "kind": "hard",
+      "sourceQuote": "At least 5 years of professional backend engineering experience in Python"
+    },
+    {
+      "id": "REQ-02",
+      "text": "Have production experience with Django or FastAPI",
+      "kind": "hard",
+      "sourceQuote": "Production experience with Django or FastAPI"
+    },
+    {
+      "id": "REQ-03",
+      "text": "Have experience deploying and operating workloads on Kubernetes in production",
+      "kind": "hard",
+      "sourceQuote": "Experience deploying and operating workloads on Kubernetes in production"
+    },
+    {
+      "id": "REQ-04",
+      "text": "Have strong PostgreSQL skills including schema design and query optimisation",
+      "kind": "hard",
+      "sourceQuote": "Strong PostgreSQL skills including schema design and query optimisation"
+    },
+    {
+      "id": "REQ-05",
+      "text": "Have event-driven architecture experience with Kafka, RabbitMQ or SQS",
+      "kind": "soft",
+      "sourceQuote": "Event-driven architecture experience (Kafka, RabbitMQ or SQS)"
+    },
+    {
+      "id": "REQ-06",
+      "text": "Have experience leading or mentoring engineers",
+      "kind": "soft",
+      "sourceQuote": "Experience leading or mentoring engineers"
+    },
+    {
+      "id": "REQ-07",
+      "text": "Have a Bachelor's degree in Computer Science or equivalent practical experience",
+      "kind": "soft",
+      "sourceQuote": "Bachelor's degree in Computer Science or equivalent practical experience"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "C-01",
+      "name": "Arjun Mehta",
+      "headline": "Staff Backend Engineer \u00b7 Logistics",
+      "location": "Pune, India",
+      "yearsExperience": 8,
+      "sourceDoc": "arjun-mehta.md",
+      "aiSummary": "Arjun Mehta has 8 years of evidenced backend engineering experience using Python and Django, including Kubernetes/EKS operations, PostgreSQL optimisation, Kafka architecture, and technical leadership. The resume does not list a Bachelor's degree, but it does document substantial equivalent practical experience.",
+      "decision": null
+    },
+    {
+      "id": "C-02",
+      "name": "Daniel Okafor",
+      "headline": "Backend Engineer \u00b7 Healthcare",
+      "location": "Lagos, Nigeria \u00b7 Remote",
+      "yearsExperience": 4,
+      "sourceDoc": "daniel-okafor.md",
+      "aiSummary": "Daniel Okafor is a Backend Engineer with four years of evidenced Python and FastAPI experience in healthcare, including PostgreSQL table modelling and partner API work. The resume does not evidence five years of experience, Kubernetes production operations, event-driven systems, query optimisation, or engineering leadership or mentoring.",
+      "decision": null
+    },
+    {
+      "id": "C-03",
+      "name": "Priya Sharma",
+      "headline": "Senior Backend Engineer \u00b7 Fintech",
+      "location": "Bengaluru, India",
+      "yearsExperience": 6,
+      "sourceDoc": "priya-sharma.md",
+      "aiSummary": "Priya Sharma has six years of evidenced backend engineering experience in Python, including production FastAPI services, PostgreSQL schema and query optimisation, Docker-based containerisation, and RabbitMQ/Celery processing. The resume does not evidence production Kubernetes deployment or operations.",
+      "decision": null
+    },
+    {
+      "id": "C-04",
+      "name": "Sara Lindqvist",
+      "headline": "Platform Engineer \u00b7 Cloud Infrastructure",
+      "location": "Stockholm, Sweden",
+      "yearsExperience": 7,
+      "sourceDoc": "sara-lindqvist.md",
+      "aiSummary": "Sara Lindqvist has seven years of platform engineering experience at Klarna, including production Kubernetes operations, Python tooling, Kafka platform ownership, and PostgreSQL administration. The resume does not evidence five years of backend engineering in Python, Django or FastAPI production experience, or PostgreSQL schema design and query optimisation.",
+      "decision": null
+    },
+    {
+      "id": "C-05",
+      "name": "Wei Chen",
+      "headline": "Backend Developer \u00b7 E-commerce",
+      "location": "Singapore",
+      "yearsExperience": 2,
+      "sourceDoc": "wei-chen.md",
+      "aiSummary": "Wei Chen has two years of evidenced backend experience at Shopee using Python, Flask, and PostgreSQL, with unit testing for a returns service. The resume does not show five years of experience, Django or FastAPI, production Kubernetes operations, event-driven systems, or engineering leadership; PostgreSQL schema design and query optimisation are also not demonstrated.",
+      "decision": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-C01-REQ01",
+      "candidateId": "C-01",
+      "requirementId": "REQ-01",
+      "status": "met",
+      "reason": "The resume documents Python experience in backend engineering roles spanning 2018 to 2026, exceeding the five-year requirement.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Python and Django order services.",
+          "sourceDoc": "arjun-mehta.md",
+          "locationHint": "Experience \u2014 Zomato",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C01-REQ02",
+      "candidateId": "C-01",
+      "requirementId": "REQ-02",
+      "status": "met",
+      "reason": "The candidate explicitly owned a Django monolith serving an API and also worked on Django order services, demonstrating professional Django experience in service workloads.",
+      "missingDetail": null,
+      "confidence": 0.98,
+      "evidence": [
+        {
+          "quote": "Owned the Django monolith serving the shipment allocation API",
+          "sourceDoc": "arjun-mehta.md",
+          "locationHint": "Experience \u2014 Delhivery",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C01-REQ03",
+      "candidateId": "C-01",
+      "requirementId": "REQ-03",
+      "status": "met",
+      "reason": "The resume explicitly describes migrating 40 services to Amazon EKS and being on-call for the cluster for two years, demonstrating deployment and operational Kubernetes experience.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Migrated 40 services to Amazon EKS and held on-call for the cluster for two years.",
+          "sourceDoc": "arjun-mehta.md",
+          "locationHint": "Experience \u2014 Delhivery",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C01-REQ04",
+      "candidateId": "C-01",
+      "requirementId": "REQ-04",
+      "status": "met",
+      "reason": "The candidate re-modelled PostgreSQL shipment tables, added partial indexes, and reduced query time by 70%, directly demonstrating schema design and query optimisation.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Re-modelled the PostgreSQL shipment tables and introduced partial indexes, reducing allocation query time by 70%.",
+          "sourceDoc": "arjun-mehta.md",
+          "locationHint": "Experience \u2014 Delhivery",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C01-REQ05",
+      "candidateId": "C-01",
+      "requirementId": "REQ-05",
+      "status": "met",
+      "reason": "The resume explicitly describes designing a Kafka event model for shipment state transitions across six consumer groups, demonstrating event-driven architecture experience.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Designed the Kafka event model for shipment state transitions across six consumer groups.",
+          "sourceDoc": "arjun-mehta.md",
+          "locationHint": "Experience \u2014 Delhivery",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C01-REQ06",
+      "candidateId": "C-01",
+      "requirementId": "REQ-06",
+      "status": "met",
+      "reason": "The candidate was tech lead for a team of five backend engineers, explicitly demonstrating engineering leadership.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Tech lead for a team of five backend engineers.",
+          "sourceDoc": "arjun-mehta.md",
+          "locationHint": "Experience \u2014 Delhivery",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C01-REQ07",
+      "candidateId": "C-01",
+      "requirementId": "REQ-07",
+      "status": "met",
+      "reason": "No Bachelor's degree is listed, but the resume documents eight years of progressively senior professional backend engineering work, which provides equivalent practical experience.",
+      "missingDetail": null,
+      "confidence": 0.84,
+      "evidence": [
+        {
+          "quote": "Staff Backend Engineer, Delhivery \u2014 2022 to 2026",
+          "sourceDoc": "arjun-mehta.md",
+          "locationHint": "Experience \u2014 Delhivery",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C02-REQ01",
+      "candidateId": "C-02",
+      "requirementId": "REQ-01",
+      "status": "partial",
+      "reason": "The resume shows professional backend engineering in Python from 2022 to 2026, but this evidences four years rather than the required five or more.",
+      "missingDetail": "At least one additional year of professional backend engineering experience in Python.",
+      "confidence": 0.98,
+      "evidence": [
+        {
+          "quote": "Backend Engineer, Helium Health \u2014 2022 to 2026",
+          "sourceDoc": "daniel-okafor.md",
+          "locationHint": "Experience \u2014 Helium Health",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C02-REQ02",
+      "candidateId": "C-02",
+      "requirementId": "REQ-02",
+      "status": "met",
+      "reason": "The resume explicitly describes building and using a FastAPI service in a production healthcare context.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Built the FastAPI patient records service used by 300 clinics across Nigeria and Kenya.",
+          "sourceDoc": "daniel-okafor.md",
+          "locationHint": "Experience \u2014 Helium Health",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C02-REQ03",
+      "candidateId": "C-02",
+      "requirementId": "REQ-03",
+      "status": "absent",
+      "reason": "The resume contains no relevant evidence of deploying or operating workloads on Kubernetes in production.",
+      "missingDetail": "Production experience deploying and operating workloads on Kubernetes.",
+      "confidence": 0.99,
+      "evidence": [],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C02-REQ04",
+      "candidateId": "C-02",
+      "requirementId": "REQ-04",
+      "status": "partial",
+      "reason": "The resume shows PostgreSQL table modelling, which supports schema design experience, but it does not demonstrate query optimisation or establish the full required strength across both areas.",
+      "missingDetail": "Evidence of PostgreSQL query optimisation and stronger demonstrated proficiency across schema design and optimisation.",
+      "confidence": 0.96,
+      "evidence": [
+        {
+          "quote": "Modelled the appointments and billing tables in PostgreSQL for multi-tenant clinics.",
+          "sourceDoc": "daniel-okafor.md",
+          "locationHint": "Experience \u2014 Helium Health",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C02-REQ05",
+      "candidateId": "C-02",
+      "requirementId": "REQ-05",
+      "status": "absent",
+      "reason": "The resume contains no relevant evidence of event-driven architecture or use of Kafka, RabbitMQ, or SQS.",
+      "missingDetail": "Experience with event-driven architecture using Kafka, RabbitMQ, or SQS.",
+      "confidence": 0.99,
+      "evidence": [],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C02-REQ06",
+      "candidateId": "C-02",
+      "requirementId": "REQ-06",
+      "status": "absent",
+      "reason": "The resume contains no relevant evidence of leading or mentoring engineers.",
+      "missingDetail": "Experience leading or mentoring engineers.",
+      "confidence": 0.99,
+      "evidence": [],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C02-REQ07",
+      "candidateId": "C-02",
+      "requirementId": "REQ-07",
+      "status": "met",
+      "reason": "The resume explicitly lists a Bachelor of Science degree in Computer Science.",
+      "missingDetail": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "quote": "BSc Computer Science, University of Lagos, 2022.",
+          "sourceDoc": "daniel-okafor.md",
+          "locationHint": "Education",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C03-REQ01",
+      "candidateId": "C-03",
+      "requirementId": "REQ-01",
+      "status": "met",
+      "reason": "The resume shows Python backend work from 2020 to 2026, providing at least five years of professional Python backend engineering experience.",
+      "missingDetail": null,
+      "confidence": 0.98,
+      "evidence": [
+        {
+          "quote": "Python services for lending and collections.",
+          "sourceDoc": "priya-sharma.md",
+          "locationHint": "Experience \u2014 Kaleidofin",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C03-REQ02",
+      "candidateId": "C-03",
+      "requirementId": "REQ-02",
+      "status": "met",
+      "reason": "The resume explicitly describes twelve FastAPI services handling production traffic.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Built and owned twelve FastAPI services handling roughly 4M requests per day in production.",
+          "sourceDoc": "priya-sharma.md",
+          "locationHint": "Experience \u2014 Kaleidofin",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C03-REQ03",
+      "candidateId": "C-03",
+      "requirementId": "REQ-03",
+      "status": "unverified",
+      "reason": "The resume shows containerisation with Docker and Docker Compose, but does not demonstrate Kubernetes deployment or operations in production.",
+      "missingDetail": "Production experience deploying and operating workloads on Kubernetes.",
+      "confidence": 0.98,
+      "evidence": [
+        {
+          "quote": "Containerised microservices using Docker and Docker Compose for local and staging environments.",
+          "sourceDoc": "priya-sharma.md",
+          "locationHint": "Experience \u2014 Kaleidofin",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C03-REQ04",
+      "candidateId": "C-03",
+      "requirementId": "REQ-04",
+      "status": "met",
+      "reason": "The resume explicitly covers PostgreSQL schema design and query optimisation, including a substantial p99 latency reduction through indexes and partitioning.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Designed the PostgreSQL schema for the collections ledger and cut p99 query latency from 840ms to 96ms by reworking indexes and partitioning by month.",
+          "sourceDoc": "priya-sharma.md",
+          "locationHint": "Experience \u2014 Kaleidofin",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C03-REQ05",
+      "candidateId": "C-03",
+      "requirementId": "REQ-05",
+      "status": "met",
+      "reason": "The resume describes an event-driven settlement reconciliation workflow using RabbitMQ and Celery workers to remove processing from the request path.",
+      "missingDetail": null,
+      "confidence": 0.98,
+      "evidence": [
+        {
+          "quote": "Moved settlement reconciliation onto RabbitMQ with Celery workers to decouple it from the request path.",
+          "sourceDoc": "priya-sharma.md",
+          "locationHint": "Experience \u2014 Kaleidofin",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C03-REQ06",
+      "candidateId": "C-03",
+      "requirementId": "REQ-06",
+      "status": "met",
+      "reason": "The resume explicitly states that the candidate mentored three junior engineers and led the backend onboarding track.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Mentored three junior engineers and ran the backend onboarding track for eighteen months.",
+          "sourceDoc": "priya-sharma.md",
+          "locationHint": "Experience \u2014 Kaleidofin",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C03-REQ07",
+      "candidateId": "C-03",
+      "requirementId": "REQ-07",
+      "status": "met",
+      "reason": "The resume lists a Bachelor-level B.Tech degree in Computer Science.",
+      "missingDetail": null,
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "B.Tech in Computer Science, Vellore Institute of Technology, 2020.",
+          "sourceDoc": "priya-sharma.md",
+          "locationHint": "Education",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C04-REQ01",
+      "candidateId": "C-04",
+      "requirementId": "REQ-01",
+      "status": "partial",
+      "reason": "The resume shows professional Python development through tooling work during the candidate's platform engineering tenure, but it does not establish five or more years of backend engineering in Python.",
+      "missingDetail": "Evidence of at least five years specifically building and maintaining backend systems in Python is missing.",
+      "confidence": 0.96,
+      "evidence": [
+        {
+          "quote": "Wrote Python tooling for cluster provisioning, drift detection and certificate rotation.",
+          "sourceDoc": "sara-lindqvist.md",
+          "locationHint": "Experience \u2014 Klarna",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C04-REQ02",
+      "candidateId": "C-04",
+      "requirementId": "REQ-02",
+      "status": "unverified",
+      "reason": "The resume shows Python tooling experience, which is adjacent to backend development, but it does not name Django or FastAPI or demonstrate production use of either framework.",
+      "missingDetail": "Production experience with Django or FastAPI is not shown.",
+      "confidence": 0.99,
+      "evidence": [
+        {
+          "quote": "Wrote Python tooling for cluster provisioning, drift detection and certificate rotation.",
+          "sourceDoc": "sara-lindqvist.md",
+          "locationHint": "Experience \u2014 Klarna",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C04-REQ03",
+      "candidateId": "C-04",
+      "requirementId": "REQ-03",
+      "status": "met",
+      "reason": "The resume explicitly documents operating multiple Kubernetes clusters in production and running approximately 1,200 services on them.",
+      "missingDetail": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "quote": "Operated 14 production Kubernetes clusters running approximately 1,200 services.",
+          "sourceDoc": "sara-lindqvist.md",
+          "locationHint": "Experience \u2014 Klarna",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C04-REQ04",
+      "candidateId": "C-04",
+      "requirementId": "REQ-04",
+      "status": "partial",
+      "reason": "The resume demonstrates production PostgreSQL experience and connection-pooling tuning, but it does not explicitly show schema design or query optimisation.",
+      "missingDetail": "Evidence of PostgreSQL schema design and query optimisation is missing.",
+      "confidence": 0.97,
+      "evidence": [
+        {
+          "quote": "Ran PostgreSQL upgrades and tuned connection pooling for 40 teams.",
+          "sourceDoc": "sara-lindqvist.md",
+          "locationHint": "Experience \u2014 Klarna",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C04-REQ05",
+      "candidateId": "C-04",
+      "requirementId": "REQ-05",
+      "status": "met",
+      "reason": "The resume explicitly states ownership of a Kafka platform, including topic governance and consumer lag alerting, demonstrating relevant Kafka-based event-driven platform experience.",
+      "missingDetail": null,
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "quote": "Owned the Kafka platform, including topic governance and consumer lag alerting.",
+          "sourceDoc": "sara-lindqvist.md",
+          "locationHint": "Experience \u2014 Klarna",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C04-REQ06",
+      "candidateId": "C-04",
+      "requirementId": "REQ-06",
+      "status": "met",
+      "reason": "The resume explicitly states that the candidate led a four-person platform reliability team.",
+      "missingDetail": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "quote": "Led the four-person platform reliability team from 2024.",
+          "sourceDoc": "sara-lindqvist.md",
+          "locationHint": "Experience \u2014 Klarna",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C04-REQ07",
+      "candidateId": "C-04",
+      "requirementId": "REQ-07",
+      "status": "met",
+      "reason": "The resume lists an MSc in Computer Engineering, a directly relevant higher-level technical degree that satisfies the degree-or-equivalent criterion.",
+      "missingDetail": null,
+      "confidence": 0.98,
+      "evidence": [
+        {
+          "quote": "MSc Computer Engineering, KTH Royal Institute of Technology.",
+          "sourceDoc": "sara-lindqvist.md",
+          "locationHint": "Education",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C05-REQ01",
+      "candidateId": "C-05",
+      "requirementId": "REQ-01",
+      "status": "partial",
+      "reason": "The resume shows Python backend experience from 2024 to 2026, but this is approximately two years rather than the required five or more years.",
+      "missingDetail": "At least three additional years of professional backend engineering experience in Python.",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "quote": "Backend Developer, Shopee \u2014 2024 to 2026",
+          "sourceDoc": "wei-chen.md",
+          "locationHint": "Experience \u2014 Shopee",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C05-REQ02",
+      "candidateId": "C-05",
+      "requirementId": "REQ-02",
+      "status": "unverified",
+      "reason": "The resume demonstrates experience building Flask APIs, but it does not show production experience with Django or FastAPI.",
+      "missingDetail": "Production experience with Django or FastAPI.",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "quote": "Built internal Flask APIs for the merchant returns workflow.",
+          "sourceDoc": "wei-chen.md",
+          "locationHint": "Experience \u2014 Shopee",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C05-REQ03",
+      "candidateId": "C-05",
+      "requirementId": "REQ-03",
+      "status": "absent",
+      "reason": "No evidence of deploying or operating workloads on Kubernetes in production appears in the resume.",
+      "missingDetail": "Production Kubernetes deployment and operations experience.",
+      "confidence": 1.0,
+      "evidence": [],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C05-REQ04",
+      "candidateId": "C-05",
+      "requirementId": "REQ-04",
+      "status": "partial",
+      "reason": "The resume shows experience writing PostgreSQL queries, but it does not demonstrate schema design or query optimisation, which are required for the stated strong PostgreSQL skill level.",
+      "missingDetail": "Evidence of PostgreSQL schema design and query optimisation.",
+      "confidence": 0.98,
+      "evidence": [
+        {
+          "quote": "Wrote PostgreSQL queries for the returns reporting dashboard.",
+          "sourceDoc": "wei-chen.md",
+          "locationHint": "Experience \u2014 Shopee",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C05-REQ05",
+      "candidateId": "C-05",
+      "requirementId": "REQ-05",
+      "status": "absent",
+      "reason": "No experience with event-driven architecture or Kafka, RabbitMQ, or SQS appears in the resume.",
+      "missingDetail": "Event-driven architecture experience using Kafka, RabbitMQ, or SQS.",
+      "confidence": 1.0,
+      "evidence": [],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C05-REQ06",
+      "candidateId": "C-05",
+      "requirementId": "REQ-06",
+      "status": "absent",
+      "reason": "The resume contains no evidence of leading or mentoring engineers.",
+      "missingDetail": "Experience leading or mentoring engineers.",
+      "confidence": 1.0,
+      "evidence": [],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    },
+    {
+      "id": "F-C05-REQ07",
+      "candidateId": "C-05",
+      "requirementId": "REQ-07",
+      "status": "met",
+      "reason": "The resume explicitly lists a Bachelor of Science degree in Computer Science.",
+      "missingDetail": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "quote": "BSc Computer Science, National University of Singapore, 2024.",
+          "sourceDoc": "wei-chen.md",
+          "locationHint": "Education",
+          "verified": true
+        }
+      ],
+      "model": "kr/gpt-5.6-luna",
+      "generatedAt": "2026-09-19T13:05:23.976448+00:00"
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q-C02-REQ03",
+      "candidateId": "C-02",
+      "requirementId": "REQ-03",
+      "question": "Can you walk me through a specific workload you personally deployed and operated on Kubernetes in production, including the deployment process, your responsibilities, how you handled observability and scaling, and an operational issue you encountered?",
+      "rationale": "The resume does not establish hands-on production experience deploying or operating Kubernetes workloads, so this question tests both practical ownership and operational depth.",
+      "followUp": "What Kubernetes resources, tools, or production changes did you personally work with, and how did you verify that the workload remained reliable during releases or incidents?"
+    },
+    {
+      "id": "Q-C02-REQ05",
+      "candidateId": "C-02",
+      "requirementId": "REQ-05",
+      "question": "Can you describe a production system you worked on that used event-driven communication with Kafka, RabbitMQ, or SQS, including the role of the messaging system, how producers and consumers were designed, how failures and delivery guarantees were handled, and your personal contribution?",
+      "rationale": "The resume provides no evidence of event-driven architecture or experience with the required messaging technologies, so this question seeks a concrete production example and technical ownership.",
+      "followUp": "What specific messaging configuration or operational problem did you personally handle, and how did you diagnose and resolve it?"
+    },
+    {
+      "id": "Q-C02-REQ06",
+      "candidateId": "C-02",
+      "requirementId": "REQ-06",
+      "question": "Can you describe a situation in which you led or mentored one or more engineers, including the context, the responsibilities you took on, how you supported their development or guided the work, and the outcome?",
+      "rationale": "The resume does not demonstrate engineering leadership or mentoring, so this question distinguishes direct people-development or technical-leadership experience from general collaboration.",
+      "followUp": "What was a specific change in the engineer's performance, ownership, or growth that resulted from your involvement, and how did you assess it?"
+    },
+    {
+      "id": "Q-C03-REQ03",
+      "candidateId": "C-03",
+      "requirementId": "REQ-03",
+      "question": "Your resume describes containerising applications with Docker and Docker Compose. Can you describe a production workload you deployed and operated on Kubernetes, including your responsibilities, deployment process, monitoring, troubleshooting, and how you handled changes or incidents?",
+      "rationale": "The resume establishes containerisation experience but does not demonstrate hands-on deployment and operational ownership of Kubernetes workloads in production.",
+      "followUp": "What was the Kubernetes environment and what specific actions did you personally take during a production deployment, service issue, scaling event, or rollback?"
+    },
+    {
+      "id": "Q-C04-REQ02",
+      "candidateId": "C-04",
+      "requirementId": "REQ-02",
+      "question": "Your resume highlights Python tooling experience; can you describe a production service where you used Django or FastAPI, including your responsibilities, how it was deployed, and the scale or operational challenges you handled?",
+      "rationale": "The resume establishes adjacent Python experience but does not show production use of Django or FastAPI, so this question tests both the framework and production depth directly.",
+      "followUp": "What specific Django or FastAPI components did you implement or operate in that service, and what evidence can you provide that it ran in production, such as deployment ownership, users, traffic, or on-call responsibility?"
+    },
+    {
+      "id": "Q-C05-REQ02",
+      "candidateId": "C-05",
+      "requirementId": "REQ-02",
+      "question": "Your resume shows experience building Flask APIs. What production experience have you had with Django or FastAPI, and what responsibilities did you own in designing, deploying, and operating those services?",
+      "rationale": "The resume establishes Flask API experience but does not establish production experience with Django or FastAPI.",
+      "followUp": "Which Django or FastAPI service did you work on, how was it deployed and operated in production, and what specific contributions can you describe?"
+    },
+    {
+      "id": "Q-C05-REQ03",
+      "candidateId": "C-05",
+      "requirementId": "REQ-03",
+      "question": "What experience have you had deploying and operating workloads on Kubernetes in production? Please describe the workloads, your responsibilities, and the operational challenges you handled.",
+      "rationale": "The resume contains no evidence of production Kubernetes deployment or operations.",
+      "followUp": "Can you give a specific production Kubernetes example and explain how you handled deployment, scaling, monitoring, incident response, or rollbacks?"
+    },
+    {
+      "id": "Q-C05-REQ05",
+      "candidateId": "C-05",
+      "requirementId": "REQ-05",
+      "question": "What event-driven systems have you designed or operated using Kafka, RabbitMQ, or SQS, and how did the architecture handle message delivery, failures, ordering, and scaling?",
+      "rationale": "The resume does not establish experience with event-driven architecture or the required messaging technologies.",
+      "followUp": "Please walk through one production event-driven workflow you owned, including the messaging technology, your role, and how you addressed retries, duplicate messages, or dead-letter handling."
+    },
+    {
+      "id": "Q-C05-REQ06",
+      "candidateId": "C-05",
+      "requirementId": "REQ-06",
+      "question": "What experience have you had leading or mentoring engineers, and how did you influence their technical work, development, or delivery outcomes?",
+      "rationale": "The resume provides no evidence of engineering leadership or mentoring experience.",
+      "followUp": "Can you describe a specific situation where you led or mentored an engineer or team, what actions you took, and what changed as a result?"
+    }
+  ],
+  "activity": [
+    {
+      "id": "a001",
+      "kind": "agent",
+      "message": "Run started \u00b7 JOB-001 \u00b7 Senior Backend Engineer",
+      "at": "13:04:19"
+    },
+    {
+      "id": "a002",
+      "kind": "tool",
+      "message": "Loaded northwind-senior-backend-engineer.md (728 chars)",
+      "at": "13:04:19"
+    },
+    {
+      "id": "a003",
+      "kind": "tool",
+      "message": "Loaded 5 candidate documents",
+      "at": "13:04:19"
+    },
+    {
+      "id": "a004",
+      "kind": "agent",
+      "message": "Parsed job description \u2192 7 requirements (4 hard, 3 soft)",
+      "at": "13:04:45"
+    },
+    {
+      "id": "a005",
+      "kind": "agent",
+      "message": "C-01 Arjun Mehta \u00b7 proposed evidence for 7 requirements",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a006",
+      "kind": "agent",
+      "message": "C-02 Daniel Okafor \u00b7 proposed evidence for 7 requirements",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a007",
+      "kind": "agent",
+      "message": "C-03 Priya Sharma \u00b7 proposed evidence for 7 requirements",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a008",
+      "kind": "agent",
+      "message": "C-04 Sara Lindqvist \u00b7 proposed evidence for 7 requirements",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a009",
+      "kind": "agent",
+      "message": "C-05 Wei Chen \u00b7 proposed evidence for 7 requirements",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a010",
+      "kind": "verifier",
+      "message": "C-01 REQ-01 \u00b7 quote located in arjun-mehta.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a011",
+      "kind": "verifier",
+      "message": "C-01 REQ-02 \u00b7 quote located in arjun-mehta.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a012",
+      "kind": "verifier",
+      "message": "C-01 REQ-03 \u00b7 quote located in arjun-mehta.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a013",
+      "kind": "verifier",
+      "message": "C-01 REQ-04 \u00b7 quote located in arjun-mehta.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a014",
+      "kind": "verifier",
+      "message": "C-01 REQ-05 \u00b7 quote located in arjun-mehta.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a015",
+      "kind": "verifier",
+      "message": "C-01 REQ-06 \u00b7 quote located in arjun-mehta.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a016",
+      "kind": "verifier",
+      "message": "C-01 REQ-07 \u00b7 quote located in arjun-mehta.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a017",
+      "kind": "verifier",
+      "message": "C-02 REQ-01 \u00b7 quote located in daniel-okafor.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a018",
+      "kind": "verifier",
+      "message": "C-02 REQ-02 \u00b7 quote located in daniel-okafor.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a019",
+      "kind": "verifier",
+      "message": "C-02 REQ-04 \u00b7 quote located in daniel-okafor.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a020",
+      "kind": "verifier",
+      "message": "C-02 REQ-07 \u00b7 quote located in daniel-okafor.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a021",
+      "kind": "verifier",
+      "message": "C-03 REQ-01 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a022",
+      "kind": "verifier",
+      "message": "C-03 REQ-02 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a023",
+      "kind": "verifier",
+      "message": "C-03 REQ-03 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a024",
+      "kind": "verifier",
+      "message": "C-03 REQ-04 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a025",
+      "kind": "verifier",
+      "message": "C-03 REQ-05 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a026",
+      "kind": "verifier",
+      "message": "C-03 REQ-06 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a027",
+      "kind": "verifier",
+      "message": "C-03 REQ-07 \u00b7 quote located in priya-sharma.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a028",
+      "kind": "verifier",
+      "message": "C-04 REQ-01 \u00b7 quote located in sara-lindqvist.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a029",
+      "kind": "verifier",
+      "message": "C-04 REQ-02 \u00b7 quote located in sara-lindqvist.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a030",
+      "kind": "verifier",
+      "message": "C-04 REQ-03 \u00b7 quote located in sara-lindqvist.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a031",
+      "kind": "verifier",
+      "message": "C-04 REQ-04 \u00b7 quote located in sara-lindqvist.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a032",
+      "kind": "verifier",
+      "message": "C-04 REQ-05 \u00b7 quote located in sara-lindqvist.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a033",
+      "kind": "verifier",
+      "message": "C-04 REQ-06 \u00b7 quote located in sara-lindqvist.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a034",
+      "kind": "verifier",
+      "message": "C-04 REQ-07 \u00b7 quote located in sara-lindqvist.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a035",
+      "kind": "verifier",
+      "message": "C-05 REQ-01 \u00b7 quote located in wei-chen.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a036",
+      "kind": "verifier",
+      "message": "C-05 REQ-02 \u00b7 quote located in wei-chen.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a037",
+      "kind": "verifier",
+      "message": "C-05 REQ-04 \u00b7 quote located in wei-chen.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a038",
+      "kind": "verifier",
+      "message": "C-05 REQ-07 \u00b7 quote located in wei-chen.md (exact) \u2192 verified",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a039",
+      "kind": "agent",
+      "message": "Verification complete \u00b7 29 quotes located, 0 claims refused",
+      "at": "13:05:23"
+    },
+    {
+      "id": "a040",
+      "kind": "agent",
+      "message": "C-02 \u00b7 wrote 3 validation question(s)",
+      "at": "13:05:50"
+    },
+    {
+      "id": "a041",
+      "kind": "agent",
+      "message": "C-03 \u00b7 wrote 1 validation question(s)",
+      "at": "13:05:50"
+    },
+    {
+      "id": "a042",
+      "kind": "agent",
+      "message": "C-04 \u00b7 wrote 1 validation question(s)",
+      "at": "13:05:50"
+    },
+    {
+      "id": "a043",
+      "kind": "agent",
+      "message": "C-05 \u00b7 wrote 4 validation question(s)",
+      "at": "13:05:50"
+    },
+    {
+      "id": "a044",
+      "kind": "agent",
+      "message": "Run complete \u00b7 35 findings \u00b7 9 require human validation",
+      "at": "13:05:50"
+    }
+  ],
+  "generatedAt": "2026-09-19T13:05:50.615001+00:00"
+}

@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* ── Brand ─────────────────────────────────────────────────────────────
+     Magenta primary + deep violet for hero surfaces, lifted from the
+     reference design. Field behind the app panel is a cool blue-grey. */
+  --color-brand: #ec4899;
+  --color-brand-deep: #db2777;
+  --color-violet: #3b2a6b;
+  --color-violet-2: #55337f;
+  --color-field: #e9eef6;
+
+  /* ── Evidence status palette ───────────────────────────────────────────
+     Pastel pills, matching the reference's status chips. Emphasis stays
+     inverted on purpose: `met` is quiet, `unverified` shouts. */
+  --color-met: #047857;
+  --color-met-bg: #e7f8f0;
+  --color-met-border: #a7e8cb;
+
+  --color-partial: #1d4ed8;
+  --color-partial-bg: #eaf1ff;
+  --color-partial-border: #bcd4fe;
+
+  --color-unverified: #a1590a;
+  --color-unverified-bg: #fff6e3;
+  --color-unverified-border: #fbd88a;
+
+  --color-absent: #be123c;
+  --color-absent-bg: #ffecf0;
+  --color-absent-border: #fcc8d3;
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #1a1523;
+  --card: #ffffff;
+  --card-foreground: #1a1523;
+  --popover: #ffffff;
+  --popover-foreground: #1a1523;
+  --primary: #ec4899;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f8;
+  --secondary-foreground: #3a3447;
+  --muted: #f7f7fb;
+  --muted-foreground: #756f83;
+  --accent: #fdeaf3;
+  --accent-foreground: #a2185c;
+  --destructive: #e11d48;
+  --border: #ebebf2;
+  --input: #e3e3ee;
+  --ring: #f9a8d4;
+  --chart-1: #ec4899;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #3b82f6;
+  --chart-5: #8b5cf6;
+  --radius: 1rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    background-color: var(--color-field);
+    background-image:
+      radial-gradient(
+        1200px 600px at 85% -5%,
+        rgb(236 72 153 / 0.06),
+        transparent 60%
+      ),
+      radial-gradient(
+        900px 500px at -5% 105%,
+        rgb(59 42 107 / 0.06),
+        transparent 60%
+      );
+    @apply text-foreground;
+    -webkit-font-smoothing: antialiased;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@layer utilities {
+  /* Verbatim source text. Monospace signals "quoted, not generated". */
+  .evidence-quote {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  /* The floating application panel — the reference's defining move. */
+  .app-panel {
+    box-shadow:
+      0 1px 2px rgb(26 21 35 / 0.04),
+      0 12px 24px -8px rgb(26 21 35 / 0.08),
+      0 40px 80px -24px rgb(26 21 35 / 0.12);
+  }
+
+  .card-soft {
+    box-shadow:
+      0 1px 2px rgb(26 21 35 / 0.04),
+      0 2px 6px -2px rgb(26 21 35 / 0.05);
+  }
+
+  .card-lift {
+    box-shadow:
+      0 2px 4px rgb(26 21 35 / 0.05),
+      0 12px 24px -10px rgb(26 21 35 / 0.12);
+  }
+
+  .brand-gradient {
+    background-image: linear-gradient(
+      100deg,
+      var(--color-brand) 0%,
+      #f472b6 55%,
+      #fb7fbd 100%
+    );
+  }
+
+  .violet-gradient {
+    background-image: linear-gradient(
+      155deg,
+      var(--color-violet-2) 0%,
+      var(--color-violet) 55%,
+      #2b1d52 100%
+    );
+  }
+}
