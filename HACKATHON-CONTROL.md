@@ -29,8 +29,8 @@ Submission portal: https://theproductspace.in/user-dashboard/submissions/agentic
 | Product Space registration | ASAP | ✅ Done (confirmed by Om, 19 Sep) |
 | Work-on-project window | 19 Sep 11:00 AM → 20 Sep 11:59 PM | 🔵 Live now |
 | LinkedIn post — Day 1 | 19 Sep | ✅ **LIVE** — posted 19 Sep ~16:20 IST |
-| LinkedIn post — Day 2 | 20 Sep | 🟡 **Drafted** — 2 variants ready in `LINKEDIN-DAY2.md`, post in the evening IST window |
-| Streak form submission | After Day 2 post | ⬜ Pending (single submission, needs both links — see below) |
+| LinkedIn post — Day 2 | 20 Sep | ✅ **LIVE** — posted 20 Sep ~22:55 IST · https://www.linkedin.com/feed/update/urn:li:activity:7507491782717497344/ |
+| Streak form submission | After Day 2 post | 🔵 **Unblocked** — both links now exist, submit now |
 | Project submission | **20 Sep, 11:59 PM** | ⬜ Build essentially demo-ready; video + Vercel deploy still to do |
 | Demo Day with panelists | TBD | — |
 | Winner announcement | TBD | — |
@@ -271,7 +271,15 @@ company — *Higher Education, Bangalore, 86K followers*, matching theproductspa
 similarly named decoys), all three hashtags are live links, architecture diagram attached,
 visibility set to anyone on or off LinkedIn.
 
-**Day 2 post** — 🟢 drafted **with visuals captured**. Copy in `LINKEDIN-DAY2.md` (Variant A
+**Day 2 post — LIVE (20 Sep ~22:55 IST)**
+https://www.linkedin.com/feed/update/urn:li:activity:7507491782717497344/
+
+Verified on the live post: Product Space renders as a real mention link (the Higher Education /
+Bangalore company, same as Day 1 — not one of the similarly named decoys), all three hashtags are
+live links, the 10s verifier clip is attached and playing, visibility Anyone. First comment carries
+the repo link so the post body has no reach-suppressing external link.
+
+**Day 2 source copy** — 🟢 drafted **with visuals captured**. Copy in `LINKEDIN-DAY2.md` (Variant A
 recommended), built around the real anti-hallucination money shot. Assets are recorded and verified:
 
 - `assets/clip-verifier-10s.mp4` — 10.0s / 1280×720 / 238 KB, real 1x screen recording of
@@ -300,8 +308,8 @@ end to end. Voiceover script with exact per-segment timings and the ffmpeg merge
 
 https://forms.gle/CkqGP9JK76QvSzwp9
 
-Both "Day 1 post link" and "Day 2 post link" are **required** fields, so the form can only be
-submitted after the Day 2 post exists. Do not submit it today.
+Both "Day 1 post link" and "Day 2 post link" are **required** fields. Both posts are now live,
+so **the form can and should be submitted immediately.**
 
 Fields it asks for:
 
@@ -310,9 +318,9 @@ Fields it asks for:
 | Name | Om Prakash Sahu | ✅ |
 | Email | os4558966@gmail.com | ✅ |
 | Phone Number | — | ⬜ you have this |
-| **Team Name** | — | ⚠️ **need to decide** — suggest `HireFlow` |
-| Participant 1 · Day 1 link | `urn:li:activity:7507028227475881985` (full URL above) | ✅ |
-| Participant 1 · Day 2 link | — | ⬜ tomorrow |
+| **Team Name** | `HireFlow` | ✅ |
+| Participant 1 · Day 1 link | https://www.linkedin.com/feed/update/urn:li:activity:7507028227475881985/ | ✅ |
+| Participant 1 · Day 2 link | https://www.linkedin.com/feed/update/urn:li:activity:7507491782717497344/ | ✅ **LIVE** |
 | Participant 2 · Day 1 / Day 2 | leave blank (solo) | ✅ |
 
 Also still needed near the deadline: a screenshot of the post's likes + comments count, since the
