@@ -23,3 +23,17 @@ out/
 # Generated run artifacts (regenerate with `python -m hireflow.run`)
 api/out/*.json
 !api/out/.gitkeep
+
+# Working notes and local media — not part of the deliverable
+/assets/
+/DEMO-VOICEOVER.md
+/DEPLOY.md
+/HACKATHON-CONTROL.md
+/LINKEDIN-DAY1.md
+/LINKEDIN-DAY2.md
+/PLAN.md
+/RESEARCH.md
+/UI-SPEC.md
+/api/NOTES.md
+
+/web/CLAUDE.md
