@@ -1,0 +1,27 @@
+Yesterday I said I was building a hiring agent that shows its work.
+
+Today it's running — and the most useful thing it did was refuse to answer.
+
+Day 2 of the Agentic AI Hackathon by Product Space. HireFlow takes a job description and a stack of resumes and turns them into evidence you can audit. One JD became 10 individually addressable requirements. Five candidates, 50 evidence checks, about 90 seconds for the whole pool.
+
+Here's the moment that made the build worth it.
+
+One candidate's resume clearly mentions Docker and containerised microservices. I asked whether he meets our "Kubernetes in production" requirement. An ordinary screener pattern-matches containers to Kubernetes and moves on.
+
+Mine marked it UNVERIFIED — because nothing in that resume actually says he ran Kubernetes in production. It named exactly what was missing, then wrote the question to close the gap:
+
+"Your resume describes containerisation and cloud deployment — did you use Kubernetes in a production environment, and if so, walk me through the system and your responsibilities?"
+
+I pasted his real interview answer in: EKS, Helm charts, rolling deploys, rolled back a bad release with kubectl, on-call for that cluster for a year. It re-checked, found the line that supported the claim, and only then moved the requirement to MET — showing the exact quote it relied on. Coverage went from 6/10 to 7/10 on screen.
+
+Across the run it refused 5 of its own proposed claims, because it could not locate them in the source document. Those 5 became interview questions instead of conclusions.
+
+The architecture in one sentence: the model proposes evidence, and my code validates it. The verifier is plain code with no model call in it, so it structurally cannot fabricate a citation. Every claim carries a "Why?" button with the source text behind it.
+
+And there is no overall match score anywhere in the product. No percentage, no ranking. It organises the evidence, names what it cannot confirm, and stops. Shortlist, Needs review, or Reject stays a human decision.
+
+21 requirements across those 5 candidates are still flagged as needing a human. That is not a failure state. That is the feature.
+
+Recruiters and hiring managers: if a shortlist showed you the exact line behind every claim, and openly flagged what it could not verify, would you trust it more than a score out of 100?
+
+#AIHackathon #BuildWithAI #ProductSpace

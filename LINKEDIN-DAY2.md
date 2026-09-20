@@ -17,6 +17,41 @@ running — lead with what it does and let the visuals carry it.
 
 ---
 
+# ✅ POST THIS — everything is ready
+
+**Copy the post body from → `assets/linkedin-day2-post.txt`**
+(2,410 characters, under LinkedIn's 3,000 limit. Verified: names the hackathon, names and will tag
+Product Space, ends on a question, all three hashtags. The hook lands before the "see more" fold.)
+
+**Attach → `assets/clip-verifier-10s.mp4`** (10s, silent, no captions needed)
+
+### Five steps, in order
+
+1. **Warm up ~10 min.** Comment substantively on 5–8 posts in your feed first. This measurably
+   improves how far your own post travels.
+2. **New post → upload the video** (`assets/clip-verifier-10s.mp4`), then paste the body text.
+3. **Tag Product Space properly.** Delete the plain words "Product Space" in the third paragraph,
+   retype `@Product Space`, and pick the company from the dropdown — *Higher Education, Bangalore,
+   ~86K followers*. That's the one you tagged on Day 1; there are two similarly named decoys. The
+   tag must render as a blue mention link, not plain text, or the streak may not count.
+4. **Visibility: Anyone.** Then post.
+5. **First comment, immediately after posting:** drop the repo link there rather than in the body —
+   external links in the body suppress reach.
+   > Code's here if anyone wants to pick it apart: https://github.com/OM909090/hireflow
+   >
+   > The verifier is the interesting bit — it's plain code with no model call, so it can't invent a citation.
+
+### Then, within the first 90 minutes
+Stay present. Reply to every comment in 15–30 minutes, and reply with a question back rather than
+"thanks" — comment depth is what's weighted. Share to 2–3 relevant WhatsApp/Discord groups (not the
+hackathon group, that's announcement-only).
+
+### Immediately after it's live
+Submit the streak form with **both** day links → https://forms.gle/CkqGP9JK76QvSzwp9
+(details at the bottom of this file). It cannot be submitted until the Day 2 post exists.
+
+---
+
 ## Every number below is real — pulled from the running app
 
 Captured from the live screens in `assets/proof/` (do not invent or round these up):
@@ -34,7 +69,10 @@ Captured from the live screens in `assets/proof/` (do not invent or round these 
 
 ---
 
-## Variant A — "The claim it refused to make" (recommended)
+## Variant A — the copy that shipped to `assets/linkedin-day2-post.txt`
+
+Kept here for reference. The `.txt` file is the authoritative, length-checked version — paste from
+that, not from this block (the blockquote markers below would come along for the ride).
 
 > Yesterday I said I was building a hiring agent that shows its work.
 >

@@ -284,7 +284,17 @@ Numbers in the post copy were read off the live app, not estimated: 10 requireme
 5 candidates, 50 findings, 45 quotes located in source, **5 claims refused by the verifier**,
 21 requirements left open for a human, ~91 s for the pool, no match score anywhere.
 
-Post on 20 Sep in the ~7:00–9:30 PM IST window, then submit the streak form with both links.
+**Ready to paste:** `assets/linkedin-day2-post.txt` — 2,410 chars (limit 3,000), length-checked and
+element-checked (hackathon named, Product Space named for tagging, closing question, all three
+hashtags, hook inside the "see more" fold). Attach `assets/clip-verifier-10s.mp4`. Step-by-step
+posting order, the Product-Space tagging gotcha, and the first-comment repo link are in
+`LINKEDIN-DAY2.md` under "POST THIS".
+
+Post on 20 Sep, then submit the streak form with both links.
+
+**Demo video:** `assets/hireflow-demo-3min.mp4` — 2:38, 1280×734, 5.2 MB, silent. Full workflow
+end to end. Voiceover script with exact per-segment timings and the ffmpeg merge command is in
+`DEMO-VOICEOVER.md` (≈362 words, ~137 wpm).
 
 ### ⚠️ The streak form is ONE submission, not two
 
