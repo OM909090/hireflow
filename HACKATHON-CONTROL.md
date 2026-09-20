@@ -26,12 +26,12 @@ Submission portal: https://theproductspace.in/user-dashboard/submissions/agentic
 |---|---|---|
 | Unstop registration deadline | 19 Sep, 11:00 AM | ✅ Done (confirmed on Unstop) |
 | Kickoff call (mandatory) | 19 Sep, 08:00–09:00 AM | ⚠️ Already passed — request recording |
-| Product Space registration | ASAP | ❌ **NOT DONE** |
+| Product Space registration | ASAP | ✅ Done (confirmed by Om, 19 Sep) |
 | Work-on-project window | 19 Sep 11:00 AM → 20 Sep 11:59 PM | 🔵 Live now |
-| LinkedIn post — Day 1 | 19 Sep (today) | ✅ **LIVE** — posted 19 Sep ~16:20 IST |
-| LinkedIn post — Day 2 | 20 Sep | ⬜ Pending |
-| Streak form submission | After Day 2 post | ⬜ Pending (needs both links — see below) |
-| Project submission | **20 Sep, 11:59 PM** | ⬜ ~32 hours left |
+| LinkedIn post — Day 1 | 19 Sep | ✅ **LIVE** — posted 19 Sep ~16:20 IST |
+| LinkedIn post — Day 2 | 20 Sep | 🟡 **Drafted** — 2 variants ready in `LINKEDIN-DAY2.md`, post in the evening IST window |
+| Streak form submission | After Day 2 post | ⬜ Pending (single submission, needs both links — see below) |
+| Project submission | **20 Sep, 11:59 PM** | ⬜ Build essentially demo-ready; video + Vercel deploy still to do |
 | Demo Day with panelists | TBD | — |
 | Winner announcement | TBD | — |
 
@@ -52,21 +52,26 @@ reviewing notes instead of talking to candidates.
 
 ### Required capabilities (this is your build checklist)
 
-| # | Capability | Status |
-|---|---|---|
-| 1 | Upload a job description + candidate resumes | ⬜ |
-| 2 | Extract skills, experience, projects, qualifications per candidate | ⬜ |
-| 3 | Map candidate experience against specific job requirements | ⬜ |
-| 4 | Identify missing / unclear info needing validation | ⬜ |
-| 5 | Group candidates by relevant experience and role fit | ⬜ |
-| 6 | Generate structured candidate summaries for recruiters | ⬜ |
-| 7 | Create role-specific interview questions per candidate background | ⬜ |
-| 8 | Generate follow-up questions when an answer needs deeper validation | ⬜ |
-| 9 | Summarize interview notes, map evidence back to job requirements | ⬜ |
-| 10 | Identify unanswered evaluation areas after an interview | ⬜ |
-| 11 | Generate a standardized interview evaluation report | ⬜ |
-| 12 | Natural-language querying of the candidate pool | ⬜ |
-| 13 | Audit trail: which candidate info produced each insight | ⬜ |
+| # | Capability | Status | Where in the app |
+|---|---|---|---|
+| 1 | Upload a job description + candidate resumes | ✅ | Intake `/` |
+| 2 | Extract skills, experience, projects, qualifications per candidate | ✅ | Findings + evidence quotes |
+| 3 | Map candidate experience against specific job requirements | ✅ | Requirement coverage + matrix |
+| 4 | Identify missing / unclear info needing validation | ✅ | `unverified`/`absent` + "needs validation" |
+| 5 | Group candidates by relevant experience and role fit | ➖ | Deprioritized; matrix + NL query cover it |
+| 6 | Generate structured candidate summaries for recruiters | ✅ | AI summary + decision hero |
+| 7 | Create role-specific interview questions per candidate background | ✅ | Agent panel — "Suggest a question" |
+| 8 | Generate follow-up questions when an answer needs deeper validation | ✅ | Agent panel — follow-up on insufficient answer |
+| 9 | Summarize interview notes, map evidence back to job requirements | ✅ | Agent analyses answer → records evidence to REQ |
+| 10 | Identify unanswered evaluation areas after an interview | ✅ | Open requirements stay flagged; audit trail |
+| 11 | Generate a standardized interview evaluation report | ✅ | `EvaluationReport` (Resume / Interview / Final) |
+| 12 | Natural-language querying of the candidate pool | ✅ | `/ask` + pool NL query |
+| 13 | Audit trail: which candidate info produced each insight | ✅ | `[Why?]` on every claim + verification audit |
+
+**Coverage: 12 of 13 built** (only #5 grouping intentionally deprioritized — the plan cut it as a
+no-demo-moment feature; the evidence matrix and NL query cover the underlying need). The verifier
+that backs #4/#13 is pure Python with 15 passing tests: the LLM proposes evidence, the code
+validates it, and it refuses to mark a requirement "met" if it can't locate the quote in the source.
 
 **Stated goal:** reduce repetitive recruitment work while keeping human hiring decisions at the
 center. Do not build an auto-reject machine — keep the human in the loop. Item 13 (audit trail) is
@@ -238,14 +243,21 @@ trail (item 13). It's the least glamorous requirement and the easiest place to s
 
 ---
 
-## Recommended next 5 actions
+## Recommended next actions (Day 2, in order)
 
-1. **Register on theproductspace.in** — everything else is blocked on this
-2. Ask in the WhatsApp group / message Himanshu for the kickoff recording
-3. Publish the Day 1 LinkedIn post today (19 Sep) and log it in the Google Form
-4. Scope HireFlow to the 13 capabilities — pick a thin vertical slice that demos end to end
-5. Set a personal cutoff of 20 Sep ~8:00 PM for the demo video so Drive upload + permission
-   checks aren't rushed against the 11:59 PM wall
+1. **Post the Day-2 LinkedIn update** (Variant A in `LINKEDIN-DAY2.md`) in the ~7:00-9:30 PM IST
+   window, with a 10s clip of the Kubernetes verifier moment. Stay present the first 90 min.
+2. **Submit the streak form** (https://forms.gle/CkqGP9JK76QvSzwp9) once Day 2 is live — it needs
+   both day links in a single submission. Team name: `HireFlow`.
+3. **Record the 3-min demo video.** Lead with the confrontation arc: ask about Kubernetes → loud
+   UNVERIFIED → generated question → paste answer → flips to MET with the `[Why?]` quote → human
+   decides. Then the live agent trace and the NL query.
+4. **Vercel deploy** — needs Om's login/token. ⚠️ The model proxy at `127.0.0.1:20128` is
+   unreachable from Vercel; either point `HIREFLOW_BASE_URL` at a reachable endpoint or ship with
+   the recorded `run.json` demo data. See `DEPLOY.md`.
+5. **Submit the project** at theproductspace.in: upload the video to Drive as "anyone with the
+   link", verify in incognito, attach the GitHub repo, then submit. One shot — review everything
+   first. Personal cutoff ~8:00 PM so nothing is rushed against the 11:59 PM wall.
 
 ---
 
@@ -259,8 +271,11 @@ company — *Higher Education, Bangalore, 86K followers*, matching theproductspa
 similarly named decoys), all three hashtags are live links, architecture diagram attached,
 visibility set to anyone on or off LinkedIn.
 
-**Day 2 post** — not yet written. Draft it tomorrow so it reflects what actually broke during the
-build. Outline is in `LINKEDIN-DAY1.md`.
+**Day 2 post** — 🟡 drafted, ready to post. Two variants in `LINKEDIN-DAY2.md`, both built around
+the real anti-hallucination money shot (agent refuses to mark "Kubernetes in production" met on
+Docker evidence, writes the interview question, flips to met only when the answer can be traced to
+a line). Recommended: Variant A. Post on 20 Sep in the ~7:00-9:30 PM IST window, attach a 10s clip
+of that verifier moment, then submit the streak form with both links.
 
 ### ⚠️ The streak form is ONE submission, not two
 
@@ -293,7 +308,9 @@ engagement bonus is scored at submission time.
 | `HACKATHON-CONTROL.md` | This file — logistics, deadlines, rules, links |
 | `RESEARCH.md` | Domain, regulatory, competitive, technical research with sources |
 | `LINKEDIN-DAY1.md` | Three ready-to-post Day 1 drafts + posting mechanics |
+| `LINKEDIN-DAY2.md` | Two ready-to-post Day 2 drafts (the verifier money shot) + form checklist |
 | `PLAN.md` | Build plan — dependency map, block cut, time budget, demo-backward shots |
+| `DEPLOY.md` | Vercel deploy steps + the 127.0.0.1 model-proxy caveat |
 | `assets/` | Day 1 diagram (HTML source + 2400×2400 PNG), post text parts |
 
 ## Progress log
@@ -337,3 +354,43 @@ engagement bonus is scored at submission time.
   404, OG + Twitter images, full metadata. Consolidated into one git repo at the root (secret
   verified out of the commit). Build + lint clean, 15 routes. Capability coverage now 9/13, matching
   the plan. Deploy is prepared (`DEPLOY.md`) but needs Om's Vercel login or a token.
+
+### Day-2 build (continued 19 → 20 Sep)
+
+- **Agent wired to the live model.** The "Ask HireFlow AI" agent is no longer a dummy — it routes
+  through the connected model (gpt-5.6-luna) via `lib/llm.ts`, `lib/prompts.ts` and API routes
+  `/api/agent/{analyze,ask,question,health}`. The model *decides* verification; the server refuses
+  a "met" verdict when the supporting quote can't be located in the answer. Deleted the
+  deterministic stand-in (`lib/interview-eval.ts`). Verified with real 24-25s calls in the browser.
+- **Five parallel audit agents** driven across the pages to stress the UI/UX; fixed the major bugs
+  they found (root-scroll leak, sticky matrix headers, focus rings, pool NL query, 5+ years parsing,
+  contradictory activity label, etc.).
+- **Agent panel redesigned twice, then embedded.** Consolidated to a single-conversation chat
+  (one thread + one composer, Answer/Ask toggle), then embedded it as a sticky right-hand column
+  that fits inside the card — the workspace splits into a two-column grid on demand and the panel
+  stays fixed at full visible height while the workspace scrolls beside it. Committed `70ddfc0`.
+- **Fixed-viewport shell.** Every page fits the screen; `<main>` is the sole scroller so the app
+  container stays put and only the data inside scrolls.
+- **End-to-end verified in browser:** a real REQ-07 (Kubernetes) analysis (23.7s) flips
+  Unverified → Met only after a traceable answer, and propagates live to the coverage donut (6→7),
+  the header open-count bell (21→20) and the evaluation report. Build + lint clean throughout.
+- **Capability coverage re-assessed: 12/13** (see checklist above) — the interview-answer flow and
+  `EvaluationReport` cover #9/#10/#11, which the plan hadn't counted.
+
+- **20 Sep, ~17:50 — model provider switched.** Moved the live agent off the old 9Router proxy
+  (`127.0.0.1:20128`, `kr/gpt-5.6-luna`) onto the local OpenAI-compatible gateway on
+  `127.0.0.1:8082` running **Muse Spark 1.3** (`opencode/muse-spark-1.3-contributor-free`).
+  Updated `web/.env.local`, both `.env.example`s, the fallback defaults in `web/src/lib/llm.ts`
+  and `api/hireflow/config.py`, and `DEPLOY.md`. Re-verified all three agent routes against the
+  new model: a grounded answer verifies REQ-07 (unverified → met) in **5.2 s** (was ~24 s), a vague
+  answer is correctly **refused** (stays unverified, returns missing detail + follow-up), and
+  question generation and free-form ask both return grounded output. Build + lint clean.
+  Note: `web/src/data/run.json` still records `kr/gpt-5.6-luna` because that batch screening run
+  genuinely was produced by that model — left as-is rather than falsifying provenance. Re-run the
+  pipeline if the footer/badge should read Muse Spark everywhere.
+
+- **Next (before 20 Sep 11:59 PM):** (1) post Day-2 LinkedIn + submit streak form with both links;
+  (2) record the 3-min demo video (lead with the Kubernetes verifier arc); (3) Vercel deploy
+  (needs Om's login/token; note the 127.0.0.1 model proxy is unreachable from Vercel — see
+  `DEPLOY.md`); (4) upload video to Drive as "anyone with link", incognito-check, submit the
+  project form. One-shot submission — review first.

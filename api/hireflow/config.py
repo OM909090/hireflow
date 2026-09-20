@@ -35,7 +35,7 @@ class Settings:
 
 
 def load_settings() -> Settings:
-    base = os.getenv("HIREFLOW_BASE_URL", "http://127.0.0.1:20128/v1").rstrip("/")
+    base = os.getenv("HIREFLOW_BASE_URL", "http://127.0.0.1:8082/v1").rstrip("/")
 
     # `localhost` resolves to ::1 first on this machine and the proxy only binds
     # IPv4, which manifests as a hang rather than a refusal. Rewrite defensively.
@@ -44,5 +44,5 @@ def load_settings() -> Settings:
     return Settings(
         api_key=os.getenv("HIREFLOW_API_KEY", ""),
         base_url=base,
-        model=os.getenv("HIREFLOW_MODEL", "kr/claude-haiku-4.5"),
+        model=os.getenv("HIREFLOW_MODEL", "opencode/muse-spark-1.3-contributor-free"),
     )

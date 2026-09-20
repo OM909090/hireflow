@@ -4,7 +4,7 @@ import type { FindingStatus } from "./types";
  * HireFlow AI agent — client for the agent's server routes.
  *
  * HireFlow is an agentic product. Every function here is a real call to the
- * connected model (`HIREFLOW_MODEL`, default `kr/gpt-5.6-luna`) through the
+ * connected model (`HIREFLOW_MODEL`, currently Muse Spark 1.3) through the
  * route handlers in `src/app/api/agent/*`, which hold the prompts and the API
  * key. Nothing here decides anything itself.
  *

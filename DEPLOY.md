@@ -14,7 +14,7 @@ needs these environment variables wherever you deploy.
 | --- | --- |
 | `HIREFLOW_API_KEY` | Key for the chat/completions endpoint (server-side only). |
 | `HIREFLOW_BASE_URL` | OpenAI-compatible base URL, e.g. `https://api.example.com/v1`. |
-| `HIREFLOW_MODEL` | Model id, e.g. `kr/gpt-5.6-luna`. |
+| `HIREFLOW_MODEL` | Model id, e.g. `opencode/muse-spark-1.3-contributor-free`. |
 
 See `web/.env.example`. Locally, copy it to `web/.env.local`.
 

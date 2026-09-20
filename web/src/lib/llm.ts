@@ -5,12 +5,16 @@
  * reach the browser; the app talks to the model through the route handlers in
  * `src/app/api/agent/*`.
  *
- * Built around three real behaviours of this proxy (see api/hireflow/llm.py,
- * which does the same thing for the Python pipeline):
+ * Written to be provider-agnostic, because the endpoint has been swapped mid-build
+ * more than once. It assumes only the lowest common denominator of an
+ * OpenAI-compatible API (see api/hireflow/llm.py, which does the same for the
+ * Python pipeline):
  *
- *   1. `stream: false` must be sent explicitly or the endpoint returns SSE.
- *   2. `response_format` / `json_schema` is ignored, so JSON is enforced by
- *      system prompt + tolerant parsing + one repair retry.
+ *   1. `stream: false` is sent explicitly — some proxies return SSE by default,
+ *      and `contentFromSse` below recovers the content if one still does.
+ *   2. JSON is enforced by system prompt + tolerant parsing + one repair retry
+ *      rather than `response_format`, since not every provider honours it.
+ *      Providers that do support it still work; this is just not dependent on it.
  *   3. Calls are slow (seconds to tens of seconds), so callers get a long
  *      timeout and the UI reports real elapsed time rather than faking progress.
  */
@@ -26,10 +30,11 @@ export class LlmError extends Error {}
 export function llmConfig(): LlmConfig {
   // 127.0.0.1 rather than localhost: a v4-only bound proxy hangs on ::1.
   const baseUrl = (
-    process.env.HIREFLOW_BASE_URL ?? "http://127.0.0.1:20128/v1"
+    process.env.HIREFLOW_BASE_URL ?? "http://127.0.0.1:8082/v1"
   ).replace(/\/$/, "");
   const apiKey = process.env.HIREFLOW_API_KEY ?? "";
-  const model = process.env.HIREFLOW_MODEL ?? "kr/gpt-5.6-luna";
+  const model =
+    process.env.HIREFLOW_MODEL ?? "opencode/muse-spark-1.3-contributor-free";
   if (!apiKey) {
     throw new LlmError(
       "HIREFLOW_API_KEY is not set — the AI agent has no model access configured.",
