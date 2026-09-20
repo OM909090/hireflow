@@ -271,11 +271,20 @@ company — *Higher Education, Bangalore, 86K followers*, matching theproductspa
 similarly named decoys), all three hashtags are live links, architecture diagram attached,
 visibility set to anyone on or off LinkedIn.
 
-**Day 2 post** — 🟡 drafted, ready to post. Two variants in `LINKEDIN-DAY2.md`, both built around
-the real anti-hallucination money shot (agent refuses to mark "Kubernetes in production" met on
-Docker evidence, writes the interview question, flips to met only when the answer can be traced to
-a line). Recommended: Variant A. Post on 20 Sep in the ~7:00-9:30 PM IST window, attach a 10s clip
-of that verifier moment, then submit the streak form with both links.
+**Day 2 post** — 🟢 drafted **with visuals captured**. Copy in `LINKEDIN-DAY2.md` (Variant A
+recommended), built around the real anti-hallucination money shot. Assets are recorded and verified:
+
+- `assets/clip-verifier-10s.mp4` — 10.0s / 1280×720 / 238 KB, real 1x screen recording of
+  REQ-07 going Unverified → Met with the donut ticking 6/10 → 7/10 and the grounded quote shown.
+- `assets/proof/01..09*.png` — nine 1672×960 screens (intake, requirements, pool, matrix, activity
+  trace, workspace before/after, evaluation report, audit trail), ordered as a carousel in the doc.
+- `assets/clip-verifier-poster.png` — poster/thumbnail frame.
+
+Numbers in the post copy were read off the live app, not estimated: 10 requirements from 1 JD,
+5 candidates, 50 findings, 45 quotes located in source, **5 claims refused by the verifier**,
+21 requirements left open for a human, ~91 s for the pool, no match score anywhere.
+
+Post on 20 Sep in the ~7:00–9:30 PM IST window, then submit the streak form with both links.
 
 ### ⚠️ The streak form is ONE submission, not two
 
