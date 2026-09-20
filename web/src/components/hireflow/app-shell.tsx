@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { findings, generatedAt, job, model } from "@/lib/data";
+import { findings, generatedAt, job } from "@/lib/data";
 import {
   useVerification,
   VerificationProvider,
@@ -205,7 +205,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </span>
             <span>Evidence-backed candidate screening</span>
             <span className="ml-auto flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span>model {model}</span>
               {generatedAt && (
                 <span>
                   run{" "}
