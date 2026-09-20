@@ -111,14 +111,16 @@ Captured from the live screens in `assets/proof/` (do not invent or round these 
 ## Visuals — recorded and ready ✅
 
 ### 1. The hero: 10-second clip
-**`assets/clip-verifier-10s.mp4`** — 10.0s · 1280×720 · H.264 · 238 KB · silent.
-A real screen recording at 1x speed, no edits, final frame held 2.5s so the verdict stays readable.
+**`assets/clip-verifier-10s.mp4`** — 10.1s · 1280×734 · H.264 · 256 KB · silent.
+A real screen recording at **1x speed, start to finish, nothing sped up or cut**. The model call
+genuinely took ~5.9 seconds and you watch the counter run.
 
 | Time | What plays |
 |---|---|
-| 0.0–4.5s | Donut reads **6/10**, REQ-07 **Unverified**, banner "**3** requirements still need validation". A live counter ticks while the model works |
-| ~4.8s | **The flip** — donut **6/10 → 7/10**, badge → **Met**, banner drops to "**2** requirements still need validation" |
-| 4.8–10.0s | Verdict: **Unverified → Met · ✓ Verified by HireFlow AI**, the reason, and the grounded quote *"At Swiggy I deployed our order services on AWS EKS"* marked **"quote located in the interview answer"** |
+| 0.0–1.0s | Donut reads **6/10**, REQ-07 **Unverified**, banner "**3** requirements still need validation", the candidate's answer sitting in the composer |
+| 1.0–6.9s | Answer submitted. A live counter ticks "Checking against REQ-07… 3.3s" while the model works |
+| ~6.9s | **The flip** — donut **6/10 → 7/10**, Met 6 → 7, badge → **Met**, banner drops to "**2** requirements still need validation" |
+| 6.9–10.1s | Verdict: **Unverified → Met · ✓ Verified by HireFlow AI**, the reason, and the grounded quote *"I deployed our order services on AWS EKS"* marked **"quote located in the interview answer"** |
 
 It works as a hook because a number visibly changes and the system cites the line it used.
 
@@ -140,9 +142,10 @@ Best order if you post a carousel. Suggested caption per slide:
 
 If you'd rather post a single image, use **`07-verified-verdict.png`**. If a single video, use the clip.
 
-**Small thing to know:** the tiny header badge names the model that produced the batch screening
-run, which isn't the same one now driving the live agent panel. It's ~10px and won't read on a
-phone. If you want it uniform, re-run the pipeline before recording the 3-minute demo video.
+All assets were re-captured after removing the decorative model badge from the header, so the chrome
+is clean and consistent across the clip and all nine screens. Model provenance still appears where
+it's actually evidence — the footer run stamp and each finding's `[Why?]` row — which is the audit
+trail, not decoration.
 
 Don't name model providers or endpoints in the post copy — say "the model". Keep the internals internal.
 

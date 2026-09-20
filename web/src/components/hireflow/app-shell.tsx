@@ -11,7 +11,6 @@ import {
   LayoutGrid,
   Link2,
   ListChecks,
-  Sparkles,
   Users,
 } from "lucide-react";
 
@@ -46,8 +45,9 @@ function isActive(pathname: string, href: string) {
  *
  * The reference design's header carried decorative controls; here every control
  * does something real. The bell reports the actual number of requirements
- * awaiting human validation, Share copies a working link, and the badge names
- * the model that produced the findings on screen.
+ * awaiting human validation, and Share copies a working link. Model provenance
+ * lives in the footer next to the run timestamp, where it belongs — the agent
+ * panel reports the model actually answering, so the header stays uncluttered.
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -137,14 +137,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="ml-auto flex items-center gap-2">
-              <span
-                className="hidden items-center gap-1.5 rounded-full border border-primary/25 bg-accent px-3 py-1.5 text-xs font-semibold text-accent-foreground sm:inline-flex"
-                title="Model that produced the findings on screen"
-              >
-                <Sparkles className="size-3.5" aria-hidden />
-                {model}
-              </span>
-
               <button
                 type="button"
                 onClick={share}
