@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HireFlow — Evidence-backed candidate screening</title>
+    <meta
+      name="description"
+      content="HireFlow maps candidates against job requirements and shows the source evidence behind every claim. A pure-code verifier decides what is true, so it cannot hallucinate."
+    />
+    <meta name="application-name" content="HireFlow" />
+    <link rel="canonical" href="https://hire-flow.dev/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="HireFlow" />
+    <meta property="og:title" content="HireFlow — Evidence-backed candidate screening" />
+    <meta
+      property="og:description"
+      content="The model proposes evidence. The code validates it. HireFlow refuses the claims it cannot ground in the source document."
+    />
+    <meta property="og:url" content="https://hire-flow.dev/" />
+    <meta property="og:image" content="./img/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="HireFlow — Evidence-backed candidate screening" />
+    <meta name="twitter:description" content="The model proposes evidence. The code validates it." />
+    <meta name="twitter:image" content="./img/og.png" />
+
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- ambient background -->
+    <div class="bg-layer" aria-hidden="true">
+      <div class="aurora a"></div>
+      <div class="aurora b"></div>
+      <div class="grid"></div>
+      <canvas id="net"></canvas>
+    </div>
+
+    <header class="site-header" id="header">
+      <a class="brand" href="./">
+        <span class="brand-mark" aria-hidden="true">
+          <!-- HireFlow glyph: evidence check whose tail flows into the advance node -->
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
+            <path d="M3.4 12.6l4 4L13.6 8.6" stroke="currentColor" stroke-width="2.6"
+                  stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M13.6 8.6C16 6.6 18.4 7 20.5 4.6" stroke="currentColor"
+                  stroke-width="2.2" stroke-linecap="round" opacity="0.75" />
+            <circle cx="20.6" cy="4.5" r="1.8" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="brand-name">HireFlow</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#product">Product</a>
+        <a href="#run">The run</a>
+        <a href="#stack">Stack</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <!-- ───────────────────────── hero ───────────────────────── -->
+      <section class="hero">
+        <span class="hero-badge"><b>AGENTIC AI HACKATHON 2026</b> Product Space</span>
+
+        <h1>
+          The model proposes evidence.<br />
+          <span class="grad-text">The code validates it.</span>
+        </h1>
+
+        <p class="lede">
+          HireFlow reads a job description and a stack of resumes, then produces a screening report
+          where every claim points back to the exact line of the source document it came from. When a
+          claim can't be grounded, HireFlow refuses it and asks the question instead.
+        </p>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#evidence">See real findings</a>
+          <a class="btn btn-ghost" href="#product">Tour the product</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-num" data-count="0">0</span>
+            <span class="stat-label">match scores shown anywhere</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-count="5" data-suffix="">5</span>
+            <span class="stat-label">of 50 claims refused by the verifier</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-count="91" data-suffix="s">91s</span>
+            <span class="stat-label">to screen a 5-candidate pool</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────── the idea ───────────────────────── -->
+      <section class="band" id="how">
+        <div class="band-inner">
+          <p class="eyebrow">The idea in one sentence</p>
+          <h2 class="band-title">The LLM never gets the final say on its own evidence.</h2>
+          <p class="band-lede">
+            The model returns candidate claims with quotes. A verifier written in plain Python — no
+            model call anywhere inside it — then goes and locates each quote in the source document.
+            If the quote can't be found, the claim is refused and the requirement is flagged for a
+            human instead of being marked satisfied.
+          </p>
+          <p class="band-note">
+            That single boundary is what makes the output defensible. The component that decides truth
+            structurally cannot hallucinate, because it cannot generate text.
+          </p>
+
+          <div class="pipeline" aria-label="Pipeline architecture">
+            <div class="pipe-node">
+              <span class="pipe-kind">ingest</span>
+              <span class="pipe-label">Job description<br />+ resumes</span>
+            </div>
+            <span class="pipe-link" aria-hidden="true"></span>
+            <div class="pipe-node">
+              <span class="pipe-kind">extract</span>
+              <span class="pipe-label">Model proposes<br />claims + quotes</span>
+            </div>
+            <span class="pipe-link" aria-hidden="true"></span>
+            <div class="pipe-node pipe-verify">
+              <span class="pipe-kind">verify</span>
+              <span class="pipe-label">Pure-code verifier<br /><em>locates every quote</em></span>
+            </div>
+            <span class="pipe-link" aria-hidden="true"></span>
+            <div class="pipe-node">
+              <span class="pipe-kind">map</span>
+              <span class="pipe-label">Requirement status<br />+ evidence matrix</span>
+            </div>
+            <span class="pipe-link" aria-hidden="true"></span>
+            <div class="pipe-node">
+              <span class="pipe-kind">ask</span>
+              <span class="pipe-label">Interview question<br />for what stayed open</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────── statuses ───────────────────────── -->
+      <section class="section">
+        <div class="section-inner">
+          <p class="eyebrow">Requirement statuses</p>
+          <h2 class="section-title">Assigned by explicit rule, not left to the model's discretion.</h2>
+
+          <table class="status-table">
+            <thead>
+              <tr><th scope="col">Status</th><th scope="col">Rule</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pill pill-met">Met</span></td>
+                <td>Explicit evidence satisfies the requirement</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-partial">Partial</span></td>
+                <td>Explicit evidence satisfies <em>part</em> of the requirement</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-unverified">Unverified</span></td>
+                <td>Related evidence exists, but the required detail is not demonstrated</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-absent">Absent</span></td>
+                <td>No relevant evidence found at all</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="callout">
+            <strong>Unverified</strong> is the status that matters. A resume saying
+            <em>"containerised microservices with Docker"</em> against a requirement of
+            <em>"Kubernetes in production"</em> is <strong>not</strong> a match — it's a question to ask.
+          </p>
+        </div>
+      </section>
+
+      <!-- ───────────────────────── evidence ───────────────────────── -->
+      <section class="band" id="evidence">
+        <div class="band-inner">
+          <p class="eyebrow">Real output, one candidate</p>
+          <h2 class="band-title">Every finding carries the quote it came from.</h2>
+          <p class="band-lede">
+            These are unedited findings from the recorded run — Senior Backend Engineer at Northwind
+            Commerce, candidate C-01. Notice the difference between the two Spring Boot findings: the
+            same quote, read twice, at two different levels of confidence.
+          </p>
+
+          <div class="findings">
+            <article class="finding tilt">
+              <header>
+                <span class="pill pill-met">Met</span>
+                <span class="f-id">REQ-06 · Has Docker experience</span>
+              </header>
+              <p class="f-reason">
+                The capstone project explicitly used Docker and Docker Compose to run the application
+                locally, demonstrating Docker experience.
+              </p>
+              <blockquote>
+                <p>"Ran the application locally with Docker Compose."</p>
+                <footer>Projects — Campus Event System · <cite>aman-verma.md</cite></footer>
+              </blockquote>
+            </article>
+
+            <article class="finding tilt">
+              <header>
+                <span class="pill pill-unverified">Unverified</span>
+                <span class="f-id">REQ-03 · Production experience with Spring Boot</span>
+              </header>
+              <p class="f-reason">
+                Spring Boot is used in a university capstone project, but the resume does not
+                demonstrate production experience with Spring Boot.
+              </p>
+              <blockquote>
+                <p>"Built a campus event management system using Spring Boot and Docker."</p>
+                <footer>Projects — Campus Event System · <cite>aman-verma.md</cite></footer>
+              </blockquote>
+              <div class="f-turned">
+                <span class="f-turned-label">Became an interview question</span>
+                <p>
+                  "Your resume shows Spring Boot use in a university capstone project. What experience
+                  have you had deploying and maintaining Spring Boot applications in a production
+                  environment, and what responsibilities did you personally own after deployment?"
+                </p>
+              </div>
+            </article>
+
+            <article class="finding tilt">
+              <header>
+                <span class="pill pill-absent">Absent</span>
+                <span class="f-id">REQ-09 · Kafka or event streaming</span>
+              </header>
+              <p class="f-reason">
+                The resume contains no evidence of Kafka or another event-streaming platform.
+              </p>
+              <div class="f-refused">
+                <span class="f-refused-label">Refused by the verifier</span>
+                <p>
+                  The model proposed related text. The verifier could not locate a supporting quote, so
+                  the claim was refused and this requirement stayed open for a human.
+                </p>
+              </div>
+            </article>
+
+            <article class="finding tilt">
+              <header>
+                <span class="pill pill-partial">Partial</span>
+                <span class="f-id">REQ-01 · 5+ years backend experience</span>
+              </header>
+              <p class="f-reason">
+                The resume evidences six months of professional software engineering internship
+                experience, but it does not show at least five years of professional backend
+                development.
+              </p>
+              <blockquote>
+                <p>"Fixed bugs in a Java monolith and wrote unit tests."</p>
+                <footer>Experience — TechNest · <cite>aman-verma.md</cite></footer>
+              </blockquote>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────── product shots ───────────────────────── -->
+      <section class="section" id="product">
+        <div class="section-inner">
+          <p class="eyebrow">The product</p>
+          <h2 class="section-title">A working screening workspace, not a mockup.</h2>
+          <p class="band-lede">
+            Intake, requirement coverage, the candidate pool, the evidence matrix and a full audit
+            trail — every screen reads from a recorded run, so the whole app works with no model
+            access at all.
+          </p>
+
+          <div class="shots">
+            <figure class="shot tilt">
+              <img src="./img/verdict.png" alt="A verified verdict showing a candidate's evidence checked against a requirement" loading="lazy" decoding="async" />
+              <figcaption>
+                <b>Verified verdict</b>
+                Every claim carries its own provenance — finding id, confidence, the model that
+                produced it, and a timestamp.
+              </figcaption>
+            </figure>
+
+            <figure class="shot tilt">
+              <img src="./img/matrix.png" alt="Evidence matrix mapping candidates against job requirements" loading="lazy" decoding="async" />
+              <figcaption>
+                <b>Evidence matrix</b>
+                Candidates against requirements, so unverified and absent gaps are visible at a glance
+                rather than buried in prose.
+              </figcaption>
+            </figure>
+
+            <figure class="shot tilt">
+              <img src="./img/audit.png" alt="Audit trail showing which information produced each insight" loading="lazy" decoding="async" />
+              <figcaption>
+                <b>Audit trail</b>
+                Which information produced each insight — no claim in the report exists without a
+                trace back to the source line.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────── the run ───────────────────────── -->
+      <section class="band" id="run">
+        <div class="section-inner">
+          <p class="eyebrow">The recorded run</p>
+          <h2 class="section-title">Numbers read off the running app, not estimated.</h2>
+
+          <div class="metrics">
+            <div class="metric">
+              <span class="m-num" data-count="10">10</span>
+              <span class="m-label">requirements parsed from one job description</span>
+              <span class="m-sub">6 must-have · 4 nice-to-have</span>
+            </div>
+            <div class="metric">
+              <span class="m-num" data-count="5">5</span>
+              <span class="m-label">candidates screened</span>
+              <span class="m-sub">synthetic fixtures, one deliberately ambiguous</span>
+            </div>
+            <div class="metric">
+              <span class="m-num" data-count="50">50</span>
+              <span class="m-label">evidence checks run</span>
+              <span class="m-sub">one per candidate-requirement pair</span>
+            </div>
+            <div class="metric metric-hl">
+              <span class="m-num" data-count="45">45</span>
+              <span class="m-label">quotes located in the source document</span>
+              <span class="m-sub">every one matched back to its document</span>
+            </div>
+            <div class="metric metric-warn">
+              <span class="m-num" data-count="5">5</span>
+              <span class="m-label">claims refused by the verifier</span>
+              <span class="m-sub">each became an interview question</span>
+            </div>
+            <div class="metric">
+              <span class="m-num" data-count="21">21</span>
+              <span class="m-label">requirements left open for a human</span>
+              <span class="m-sub">the honest answer, not a guess</span>
+            </div>
+          </div>
+
+          <div class="breakdown">
+            <h3>How the 50 findings actually landed</h3>
+            <div class="bar" role="img" aria-label="Findings by status: 20 met, 9 partial, 16 unverified, 5 absent">
+              <span class="seg s-met" style="--w: 40%"></span>
+              <span class="seg s-partial" style="--w: 18%"></span>
+              <span class="seg s-unverified" style="--w: 32%"></span>
+              <span class="seg s-absent" style="--w: 10%"></span>
+            </div>
+            <ul class="legend">
+              <li><span class="dot d-met"></span> 20 met</li>
+              <li><span class="dot d-partial"></span> 9 partial</li>
+              <li><span class="dot d-unverified"></span> 16 unverified</li>
+              <li><span class="dot d-absent"></span> 5 absent</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────── stack ───────────────────────── -->
+      <section class="section" id="stack">
+        <div class="section-inner">
+          <p class="eyebrow">Stack &amp; architecture</p>
+          <h2 class="section-title">A LangGraph pipeline with one real conditional edge.</h2>
+          <p class="band-lede">
+            <code>evidence_sufficient?</code> routes either to a verified finding or to a generated
+            interview question. The verifier node is plain Python and is covered by unit tests — the
+            part that decides truth is the part with no model in it.
+          </p>
+
+          <div class="cards">
+            <article class="card tilt">
+              <h4>Web</h4>
+              <p>
+                Next.js App Router with React and Tailwind. API routes hold the prompts and the model
+                key server-side; the browser never sees credentials.
+              </p>
+            </article>
+            <article class="card tilt">
+              <h4>Agent pipeline</h4>
+              <p>
+                Python and LangGraph against an OpenAI-compatible chat endpoint. Batched one call per
+                candidate, run concurrently.
+              </p>
+            </article>
+            <article class="card tilt">
+              <h4>The verifier</h4>
+              <p>
+                Pure Python, no model call. Tries to locate each proposed quote in the source
+                document, and refuses the claim when it can't.
+              </p>
+            </article>
+            <article class="card tilt">
+              <h4>Audit trail</h4>
+              <p>
+                Findings carry their own provenance — finding id, confidence, the model that produced
+                them and a timestamp — visible behind <em>Why?</em> on every claim.
+              </p>
+            </article>
+          </div>
+
+          <div class="constraints">
+            <h3>Two constraints that shaped the design</h3>
+            <ul>
+              <li>
+                <strong>No structured-output guarantee.</strong> JSON is enforced by system prompt,
+                tolerant parsing and a single repair retry — not by a vendor flag. This kept the client
+                provider-agnostic.
+              </li>
+              <li>
+                <strong>Slow calls.</strong> One call per requirement would have taken about 19 minutes
+                for five candidates. Batching one call per candidate and running them concurrently took
+                ~91 seconds.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────── cta ───────────────────────── -->
+      <section class="section">
+        <div class="section-inner center">
+          <h2 class="section-title">Built for the Agentic AI Hackathon 2026</h2>
+          <p class="band-lede">
+            12 of 13 required capabilities covered. Capability 5 — explicit candidate grouping — was
+            deliberately deprioritised: with five candidates, the evidence matrix and the
+            natural-language query already covered it.
+          </p>
+          <p class="contact"><a href="mailto:founder@hire-flow.dev">founder@hire-flow.dev</a></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>HireFlow — evidence-backed candidate screening.</p>
+      <p class="muted">Candidate data in the recorded run is synthetic and was created for this project.</p>
+    </footer>
+
+    <script src="./main.js" defer></script>
+  </body>
+</html>
